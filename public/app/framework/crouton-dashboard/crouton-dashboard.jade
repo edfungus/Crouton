@@ -1,0 +1,129 @@
+link(rel="import", href="/static/common/bower/polymer/polymer.html")
+link(rel="import", href="/app-render/framework/crouton-card/crouton-card.jade")
+
+dom-module(id="crouton-dashboard")
+  template
+    link(rel="stylesheet", href="crouton-dashboard.css")
+    template(is="dom-if" if="{{!numberOfCards}}")
+      div.noCards Uh oh, no devices to display
+    div#crouton-dashboard-container
+
+
+  style(is="custom-style").
+    paper-input{
+      --paper-input-container-focus-color: grey;
+    }
+
+
+  script.
+    (function() {
+      Polymer({
+        is: "crouton-dashboard",
+        ready: function() {
+          this.cardPrefix = "crouton-";
+          this.cardIndex = {};
+          this.cardValues = {};
+          this.cardsToBeAdded = [];
+        },
+        properties: {
+          currentPage: {
+            type: String,
+            value: "",
+            observer: "displayCheck"
+          }
+        },
+        attached: function(){
+          this.container = document.getElementById("crouton-dashboard-container");
+          this.numberOfCards = 0;
+          this.pckry = new Packery(this.container, {
+            columnWidth: 250,
+            rowHeight: 250,
+            gutter: 20
+          });
+        },
+        updateValue: function(device,address,json){
+          if(this.cardValues[device+address]){
+            var cardValue = this.cardValues[device+address];
+            var update = false;
+            for (var property in json){
+              if(cardValue.hasOwnProperty(property)){
+                try {
+                  this.cardIndex[device+address].set("endPointJson.values."+property, json[property]);
+                }
+                catch(err) {
+                }
+              }
+            }
+          }
+        },
+        addDevice: function(device,deviceJson){
+          for (var address in deviceJson.endPoints){
+            if (deviceJson.endPoints.hasOwnProperty(address)) {
+              var element = document.createElement(deviceJson.endPoints[address]["card-type"]);
+              element.setAttribute("id", this.cardId(device,address));
+              element.setAttribute("device-name", device);
+              element.setAttribute("end-point-name", address);
+              element.setAttribute("end-point-json", JSON.stringify(deviceJson.endPoints[address]));
+              this.container.appendChild(element);
+
+              if(this.currentPage == "dashboard"){
+                this.relayout(element);
+              } else {
+                element.style.opacity = "0";
+                this.push("cardsToBeAdded",element);
+              }
+
+              this.cardIndex[device+address] = element;
+              this.cardValues[device+address] = deviceJson.endPoints[address].values;
+              this.numberOfCards = this.numberOfCards + 1;
+            }
+          }
+          this.relayout();
+        },
+        removeDeviceEndPoint: function(device,address){
+          this.pckry.remove(this.cardIndex[device+address]);
+          this.relayout();
+
+          delete this.cardIndex[device+address];
+          delete this.cardValues[device+address];
+          this.numberOfCards = this.numberOfCards - 1;
+        },
+        displayCheck: function(newValue){
+          if(newValue == "dashboard"){
+            this.addPackeryCards();
+          }
+        },
+        cardId: function(device, address){
+          return this.cardPrefix + device + "-" + address
+        },
+        relayout: function(element){
+          if(element){
+            var draggie = new Draggabilly(element, {
+                handle: '.dragger'
+            });
+            this.pckry.bindDraggabillyEvents(draggie);
+            this.pckry.appended(element);
+            this.pckry.layout();
+            element.style.opacity = "1";
+          } else {
+            if(this.pckry){
+              this.pckry.layout();
+            }
+          }
+        },
+        addPackeryCards: function(){
+          if($("#dashboardHolder").css('display') != "none"){
+            if(this.cardsToBeAdded[0]){
+              for(var card = 0; card < this.cardsToBeAdded.length; card++){
+                this.relayout(this.cardsToBeAdded[card]);
+              }
+              this.cardsToBeAdded = []; //not used in dom/polymer so just clearing it
+            } else {
+              this.relayout();
+            }
+          } else {
+            this.async(this.addPackeryCards,100);
+          }
+        }
+      });
+    }());

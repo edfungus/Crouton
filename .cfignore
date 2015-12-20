@@ -1,0 +1,3 @@
+node_modules/
+public/common/bower
+test_clients/

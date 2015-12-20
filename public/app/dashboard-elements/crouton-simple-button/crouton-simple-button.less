@@ -1,0 +1,43 @@
+@import "./public/common/css/style.less";
+
+crouton-simple-button{
+  width: @db-min-size;
+  min-width: @db-min-size;
+  height: @db-min-size;
+  min-height: @db-min-size;
+  display: table-row-group;
+
+  crouton-card {
+    text-align: center;
+    color: @fc-regular;
+
+    .expand {
+      margin: @dashboard-card-padding;
+      padding-top: @db-card-top-spacing;
+    }
+  }
+
+  .button{
+    margin-top: 20px;
+
+    paper-fab{
+      margin-left: auto;
+      margin-right: auto;
+      width: 100px;
+      height: 100px;
+      background-color: @button-normal;
+
+      &.paper-fab-0{
+        background-color: @button-normal;
+      }
+    }
+  }
+
+  .titleDisplay {
+    font-size: @db-title-font-size;
+    bottom: @db-title-bottom;
+    left: 0px;
+    width: 100%;
+    position: absolute;
+  }
+}

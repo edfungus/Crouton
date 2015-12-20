@@ -1,0 +1,73 @@
+@import "./public/common/css/style.less";
+
+crouton-simple-input{
+  width: @db-min-size;
+  min-width: @db-min-size;
+  height: @db-min-size;
+  min-height: @db-min-size;
+  display: table-row-group;
+
+  crouton-card {
+    text-align: center;
+    color: @fc-regular;
+
+    .expand {
+      margin: @dashboard-card-padding;
+      padding-top: @db-card-top-spacing;
+    }
+  }
+
+  .textDisplay {
+    font-size: @db-main-font-small-size;
+    margin-bottom: @db-space-under-main-text;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-height: 7em;
+    position: relative;
+
+    .constrictBox {
+      overflow-y: auto;
+      max-height: 7em;
+      position: relative;
+      display: block;
+      overflow-x: hidden;
+    }
+
+    paper-textarea {
+      text-align: left;
+      overflow-y: initial;
+
+      .paper-input-container-0 .input-content.paper-input-container label, .paper-input-container-0 .input-content.paper-input-container .paper-input-label {
+          line-height: 35px;
+      }
+    }
+
+    .gradient {
+      content: "";
+      position: absolute;
+      bottom: -16px;
+      left: 0;
+      width: 100%;
+      height: 1.2em;
+      background: linear-gradient(to bottom, rgba(255,255,255,0), @card-bg 50%);
+    }
+  }
+
+  .unitDisplay {
+    font-size: @db-edit-font-size;
+    color: @fc-gray;
+    margin-top: -6px;
+
+    i{
+      cursor: pointer;
+    }
+  }
+
+  .titleDisplay {
+    font-size: @db-title-font-size;
+    bottom: @db-title-bottom;
+    left: 0px;
+    width: 100%;
+    position: absolute;
+  }
+}

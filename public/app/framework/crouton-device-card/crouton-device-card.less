@@ -1,0 +1,49 @@
+@import "./public/common/css/style.less";
+
+@borderColor: rgba(128, 128, 128, 0.15);
+
+crouton-device-card {
+  margin-top: 20px;
+  display: block;
+  padding-bottom: 20px;
+
+  .deviceTitle {
+    width: 100%;
+    display: inline-block;
+    border-bottom: 1px @borderColor solid;
+    color: rgb(100,100,100);
+
+    .deviceName {
+      margin-right: 5px;
+      font-size: 20px;
+      float: left;
+      font-weight: 800;
+    }
+
+    .deviceStatus {
+      font-size: 20px;
+      color: @fc-subtitle;
+      font-weight: lighter;
+      float: right;
+    }
+  }
+
+  .deviceContent {
+    font-weight: 300;
+    min-height: 85px;
+    color: rgb(100,100,100);
+
+    .deviceDetails {
+
+      .detailTitle {
+        font-weight: 400;
+        margin-right: 5px;
+      }
+    }
+  }
+
+  .deviceButtons {
+    display: inline-flex;
+    float: right;
+  }
+}

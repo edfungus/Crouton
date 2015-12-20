@@ -1,0 +1,27 @@
+doctype html
+html(lang="en")
+  head
+    title= title
+    base(href="/crouton")
+    meta(name='viewport', content='width=device-width, user-scalable=no')
+    meta(name="apple-mobile-web-app-capable", content="yes")
+    meta(http-equiv="Cache-control", content="public")
+
+    //css import
+    each file in css
+      link(rel='stylesheet', href=file)
+
+  body(ng-app='Crouton')
+    crouton-frame#crouton-frame
+
+    //ui elements
+    each file in dashboardFiles
+      link(rel="import", href=file)
+
+    //js imports
+    //external
+    each file in jsExternal
+      script(src=file)
+
+    //polymer imports
+    link(rel="import", href="/app-render/framework/crouton-frame/crouton-frame.jade")

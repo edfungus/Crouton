@@ -1,0 +1,128 @@
+//color scheme mainly from: http://www.colourlovers.com/palette/1930/cheer_up_emo_kid
+
+@import url(https://fonts.googleapis.com/css?family=Lato:400,300,700);
+
+//scroll bar
+@scroll-bar: rgb(210,210,210);
+@scroll-track: rgb(165,165,165);
+
+//navigation
+@nav-bg: rgb(129,181,211);//rgb(129,181,211);//rgb(255,107,107);
+@nav-accent: rgb(78,205,196);
+@nav-accent-hover: rgb(58,185,176);
+@nav-accent-dark: rgba(91,127,148,1);
+@nav-width: 160px;
+@nav-mobile-height: 45px;
+@nav-grey: rgba(0, 0, 0, 0.1);
+
+//container
+@container-bg: rgb(229,229,229);
+@container-padding: 40px;
+@container-padding-mobile: 5px;
+
+//card
+@card-bg: rgb(250,250,250);
+@card-bg-light: rgba(250, 250, 250, .25);
+@card-margin-bottom: 20px;
+@card-border: rgb(199,244,100);
+@card-padding: 40px;
+@dashboard-card-padding: -20px;
+@card-padding-mobile: 40px;
+@card-hr-border: rgb(221,221,221);
+@card-dark: rgb(85,98,112);
+
+//buttons
+@button-normal: rgb(78,205,196);
+@button-danger: rgb(240,128,128);
+@button-grey: rgb(173,173,173);;
+
+//toastcss adjustments
+@toastcss-margin: 20px;
+
+//font colors
+@fc-light: white;
+@fc-dark: rgba(0,0,0,.7);
+@fc-nav-selected: rgba(0,0,0,.5);
+@fc-regular: rgb(100,100,100);//rgb(125,125,125);
+@fc-gray: rgb(173,173,173);
+@fc-accent: rgb(78,205,196);
+@fc-hint: rgb(234, 234, 234);
+@fc-subtitle: rgba(0,0,0,0.2);
+@fc-title: rgb(165,165,165);
+
+//mobile
+@screen-mobile: 600px;
+@margin-mobile: 10px;
+
+//dashboard card sizing
+@db-min-size: 250px;
+@db-half-gutter: 10px;
+
+//dashboard elements
+@db-space-under-main-text: 5px;
+@db-main-font-size: 58px;
+@db-main-font-small-size: 20px;
+@db-sub-font-size: 15px;
+@db-edit-font-size: 20px;
+@db-title-font-size: 24px;
+@db-title-bottom: 25px;
+@db-card-top-spacing: 10px;
+
+
+html, body {
+  font-family: 'Lato', sans-serif;
+  font-weight: 300;
+
+  //Some mobile scroll bar shenanigans
+  ::-webkit-scrollbar {
+      -webkit-appearance: none;
+  }
+
+  ::-webkit-scrollbar:vertical {
+      width: 10px;
+  }
+
+  ::-webkit-scrollbar:horizontal {
+      height: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+      background-color: @scroll-bar;
+      border: 2px solid @scroll-bar;
+  }
+
+  ::-webkit-scrollbar-track {
+      background-color: @scroll-track;
+  }
+
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  -webkit-touch-callout: none;
+
+  @media only screen and (max-width: @screen-mobile) {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+
+  /*some shared things*/
+  .dragger {
+    height: 0px;
+    width: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    padding: 0.5em 1.6875em;
+    background-image: -webkit-repeating-radial-gradient(center center, rgba(0,0,0,.2), rgba(0,0,0,.2) 1px, transparent 1px, transparent 100%);
+    background-image: -moz-repeating-radial-gradient(center center, rgba(0,0,0,.2), rgba(0,0,0,.2) 1px, transparent 1px, transparent 100%);
+    background-image: -ms-repeating-radial-gradient(center center, rgba(0,0,0,.2), rgba(0,0,0,.2) 1px, transparent 1px, transparent 100%);
+    background-image: repeating-radial-gradient(center center, rgba(0,0,0,.2), rgba(0,0,0,.2) 1px, transparent 1px, transparent 100%);
+    -webkit-background-size: 3px 3px;
+    -moz-background-size: 3px 3px;
+    background-size: 3px 3px;
+    cursor: move;
+  }
+}

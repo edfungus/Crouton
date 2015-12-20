@@ -1,0 +1,243 @@
+@import "./public/common/css/style.less";
+
+crouton-card {
+  background-clip: content-box;
+  background-color: @card-bg;
+  margin-bottom: @card-margin-bottom;
+  font-size: 16px;
+  word-wrap: break-word;
+  display: inline-block;
+  height: 100%;
+  width: 100%;
+
+  h1, h2, h3, h4, h5, h6 , p {
+    margin-top: 0px;
+    color: @fc-dark;
+  }
+
+  p {
+    margin-bottom: 10px;
+  }
+
+  img {
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 10px;
+    max-width: 100%;
+  }
+
+  .closeCard {
+    position: absolute;
+    right: 55px;
+    cursor: pointer;
+
+    @media only screen and (max-width: @screen-mobile) {
+      right: 35px;
+    }
+  }
+
+  .cardBorder {
+    height: 10px;
+    background-color: @card-border;
+    top: -10px;
+    position: relative;
+  }
+
+  &.noBorder {
+    .cardBorder {
+      display: none;
+    }
+  }
+
+  &.lighterBg {
+    background-color: @card-bg-light;
+  }
+
+  .dropShadow {
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+    height: 100%;
+  }
+
+  .cardInner{
+    padding: @card-padding;
+    height: 100%;
+    p, li {
+      color: @fc-regular;
+      font-weight: lighter;
+    }
+
+    p.header{
+      font-size: 24px;
+      border-bottom: @card-hr-border;
+      border-bottom-width: thin;
+      border-bottom-style: solid;
+      font-weight: normal;
+
+      .subTitle {
+        color: @fc-subtitle;
+        font-weight: lighter;
+        margin-left: 6px;
+        float: right;
+      }
+
+      @media only screen and (max-width: @screen-mobile) {
+        font-size: 24px;
+      }
+    }
+
+    li {
+      margin-left: 20px;
+    }
+
+    @media only screen and (max-width: @screen-mobile) {
+      padding: @card-padding-mobile;
+    }
+  }
+
+  .accent, a {
+    color: @fc-accent;
+    text-decoration: none;
+  }
+
+  .center {
+    text-align: center;
+  }
+
+  .contentBox {
+    padding: 20px;
+    background-color: @card-dark;
+    margin-bottom: 16px;
+    color: @fc-light;
+    font-weight: 100;
+    overflow-x: scroll;
+    word-wrap: normal;
+
+    .pushRight {
+      float: right;
+    }
+
+    code {
+      font-family: monospace;
+      font-size: 14px;
+    }
+
+  }
+
+  &.danger {
+    .cardInner {
+      padding: 10px 40px;
+      color: white;
+      background-color: lightcoral;
+      font-weight: 500;
+
+      .link{
+        text-decoration: underline;
+        cursor: pointer;
+      }
+    }
+  }
+
+  &.message {
+    .cardInner {
+      padding: 10px 40px;
+      color: white;
+      background-color: #4ECDC4;
+      font-weight: 100;
+
+      .link{
+        text-decoration: underline;
+        cursor: pointer;
+      }
+    }
+  }
+
+  /* THe following if ONLY for the welcome page */
+
+  .descpCard {
+    .text24{
+      font-size: 24px;
+    }
+    li {
+      list-style-type: circle;
+    }
+  }
+
+  &.banner {
+    .cardInner {
+      padding: 20px;
+      color: white;
+      background-color: @card-dark;
+      font-weight: 300;
+
+      .titleDiv {
+        padding: 40px;
+        padding-top: 0px;
+      }
+
+      .mainTitle {
+        font-size: 8vw;
+        font-weight: 500;
+
+        // @media only screen and (max-width: @screen-mobile) {
+        //   font-size: 50px;
+        // }
+      }
+
+      .subTitle {
+        font-size: 3vw;
+
+        // @media only screen and (max-width: @screen-mobile) {
+        //   font-size: 32px;
+        // }
+      }
+
+      img {
+        margin-top: 35px;
+      }
+
+      .link{
+        text-decoration: underline;
+        cursor: pointer;
+      }
+    }
+  }
+
+  paper-button {
+    display: table;
+    background-color: @button-normal;
+    margin-top: 10px;
+    color: @fc-light;
+    border-radius: 0px;
+    font-size: 16px;
+
+    &.centerBtn {
+      margin-left: auto;
+      margin-right: auto;
+    }
+    &.leftBtn {
+      margin-right: auto;
+    }
+    &.rightBtn {
+      margin-left: auto;
+    }
+    &.clear {
+      background-color: rgba(0,0,0,0);
+      color: @fc-regular;
+    }
+    &.dark {
+      background-color: @button-grey;
+    }
+  }
+
+  #input{
+    font-family: 'Lato', sans-serif;
+
+  }
+
+
+  @media only screen and (max-width: @screen-mobile) {
+    h2 { font-size: 32px;}
+    h4 { font-size: 28px;}
+    max-width: none;
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "name": "crouton",
+  "version": "1.0.0",
+  "description": "MQTT IOT Dashboard",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js",
+    "postinstall": "node_modules/.bin/bower install"
+  },
+  "author": "Edmund Fung",
+  "license": "MIT",
+  "dependencies": {
+    "bower": "^1.5.2",
+    "express": "^4.13.3",
+    "jade": "^1.11.0",
+    "jit-grunt": "^0.9.1",
+    "readdirp": "^2.0.0"
+  },
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-less": "^1.0.1",
+    "grunt-contrib-watch": "^0.6.1",
+    "jit-grunt": "^0.9.1"
+  }
+}
