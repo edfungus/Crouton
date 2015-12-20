@@ -63,7 +63,7 @@ How it Works
 
 After getting a device and a broker, we simply need to hook everything up. The beauty of Crouton is that, like the device, *Crouton is also a client to the same MQTT Broker.* As a result, Crouton does not rely on any additional centralized server than does your MQTT device. In fact, Crouton is purely a frontend application with no backend services.
 
-![MQTT diagram with Crouton and devices](/static/common/images/mqtt.png)
+![MQTT diagram with Crouton and devices](https://raw.githubusercontent.com/edfungus/Crouton/master/public/common/images/mqtt.png)
 
 Being a distributed system, like the one shown above, connection between the device and Crouton is only via the MQTT Broker. The communication between Crouton and the device is defined by a protocol that utilizes addresses and MQTT's last will and testament (LWT) feature.
 
@@ -239,7 +239,7 @@ crouton-simple-[card type]
 
 ### Simple Text
 
-![Crouton-simple-text](/static/common/images/crouton-simple-text.png) Simple text is used to display a value (text or number) on the dashboard from the device to Crouton.
+![Crouton-simple-text](https://raw.githubusercontent.com/edfungus/Crouton/master/public/common/images/crouton-simple-text.png) Simple text is used to display a value (text or number) on the dashboard from the device to Crouton.
 
 ```json
 Device -> Crouton
@@ -258,7 +258,7 @@ Example:
 
 ### Simple Input
 
-![Crouton-simple-text](/static/common/images/crouton-simple-input.png) Simple input is similar to simple text except the user can update the value on the device from Crouton. There is no length restriction of the value by Crouton.
+![Crouton-simple-input](https://raw.githubusercontent.com/edfungus/Crouton/master/public/common/images/crouton-simple-input.png) Simple input is similar to simple text except the user can update the value on the device from Crouton. There is no length restriction of the value by Crouton.
 
 ```json
 Device <-> Crouton
@@ -276,7 +276,7 @@ Example:
 
 ### Simple Slider
 
-![Crouton-simple-text](/static/common/images/crouton-simple-slider.png) Simple slider allows the user to select continuous values within a given range. Both the large number and the slider will attempt the give the real device value at all times except when the user is sliding.
+![Crouton-simple-slider](https://raw.githubusercontent.com/edfungus/Crouton/master/public/common/images/crouton-simple-slider.png) Simple slider allows the user to select continuous values within a given range. Both the large number and the slider will attempt the give the real device value at all times except when the user is sliding.
 
 ```json
 Device <-> Crouton
@@ -297,7 +297,7 @@ Example:
 
 ### Simple Button
 
-![Crouton-simple-text](/static/common/images/crouton-simple-button.png) Simple button is one directional, sending a signal (with no meaningful value) from Crouton to the device. However, this is still a bi-directional card because the button is only enable if value is *true*. If the device updates the value of the card to *false*, the button will be disabled.
+![Crouton-simple-button](https://raw.githubusercontent.com/edfungus/Crouton/master/public/common/images/crouton-simple-button.png) Simple button is one directional, sending a signal (with no meaningful value) from Crouton to the device. However, this is still a bi-directional card because the button is only enable if value is *true*. If the device updates the value of the card to *false*, the button will be disabled.
 
 ```json
 Device <-> Crouton
@@ -318,7 +318,7 @@ Example:
 
 ### Simple Toggle
 
-![Crouton-simple-text](/static/common/images/crouton-simple-toggle.png) Simple toggle allows a boolean value to be changed by both Crouton and the device. In the larger value display, priority for display is icon, labels, boolean text. If no labels or icons are given, the words true and false will be used. The labels around the toggle is only defined by *labels* object.
+![Crouton-simple-toggle](https://raw.githubusercontent.com/edfungus/Crouton/master/public/common/images/crouton-simple-toggle.png) Simple toggle allows a boolean value to be changed by both Crouton and the device. In the larger value display, priority for display is icon, labels, boolean text. If no labels or icons are given, the words true and false will be used. The labels around the toggle is only defined by *labels* object.
 
 ```json
 Device <-> Crouton
