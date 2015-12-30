@@ -4,7 +4,7 @@ BROKER = "test.mosquitto.org"   -- Ip/hostname of MQTT broker
 BRPORT = 1883             -- MQTT broker port
 BRUSER = ""           -- If MQTT authenitcation is used then define the user
 BRPWD  = ""            -- The above user password
-CLIENTID = "crouton-esp-rgb" ..  node.chipid() -- The MQTT ID. 
+CLIENTID = "crouton-esp-rgb" ..  node.chipid() -- The MQTT ID.
 print("Device name printed below:")
 print(CLIENTID)
 
@@ -140,7 +140,7 @@ function controlColor(msg)
     pwmValue = (msgObj[k]*1023)
     pwmValue = 1023 - pwmValue/255
     pwm.setduty(colors[k], pwmValue)
-    publish_data("/outbox/"..CLIENTID.."/"..k, msg)
+    publish_data("/outbox/"..CLIENTID.."/rgb", msg)
   end
 
 end

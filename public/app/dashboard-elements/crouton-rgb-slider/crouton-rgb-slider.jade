@@ -75,8 +75,8 @@ dom-module(id="crouton-rgb-slider")
           });
         },
         newValues: function(changeRecord){
-          if(this.slider){
-            var color = changeRecord.path.split("endPointJson.values.").join();
+          if(this.red && this.green && this.blue){
+            var color = changeRecord.path.split("endPointJson.values.")[1];
             if(color == "red"){
               if(this.red.pressed == false){
                 this.red.value = this.endPointJson.values.red;
