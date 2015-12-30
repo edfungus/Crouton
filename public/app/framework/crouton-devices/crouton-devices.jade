@@ -21,8 +21,7 @@ dom-module(id="crouton-devices")
       template(is="dom-repeat", items="{{devices}}")
         crouton-device-card(id="{{deviceId(item)}}", device-name="{{item}}")
       div
-        span.title Add New Device
-        paper-input(label="Type device name here", type="text", value="{{newDeviceName::input}}", on-keypress="keyCheck", required)
+        paper-input(label="Enter new device name", type="text", value="{{newDeviceName::input}}", on-keypress="keyCheck", required)
         div.addButtons
           paper-button(type="submit", disabled$="{{validateNewDeviceInput(newDeviceName)}}", on-click="addDevice", raised) Add Device
 

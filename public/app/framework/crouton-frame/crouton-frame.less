@@ -155,27 +155,49 @@ crouton-navigation {
     font-weight: normal;
     text-align: center;
     color: white;
-    border-bottom: solid 4px @nav-accent-dark;
+    border-bottom: solid 4px @nav-bg;
     padding-top: 8px;
+    cursor: default;
+  }
+
+  .logInText {
+    width: 75px;
+    // background-color: rgba(129, 181, 211, 0.64);
+    font-size: 15px;
+    font-weight: 700;
+    text-align: center;
+    // color: white;
+    color: @fc-nav-selected;
+    // border-bottom: solid 4px rgba(129, 181, 211, 0.64);
+    cursor: pointer;
+    line-height: 28px;
+  }
+
+  .signUpText {
+    width: 75px;
+    background-color: rgba(78, 205, 196, 0.64);
+    font-size: 15px;
+    font-weight: 100;
+    text-align: center;
+    color: white;
+    border-bottom: solid 4px rgb(78, 205, 196);
+    cursor: pointer;
+    line-height: 28px;
   }
 
   .rightSide {
     position: absolute;
-    top: 0;
-    right: 10px;
-    text-align: left;
-    margin-left: 150px;
-    color: @fc-hint;
-    font-size: 14px;
-    padding: 5px 10px;
-    height: 100%;
-    line-height: 17px;
+    top: 25px;
+    right: 40px;
+    text-align: center;
+    padding-top: 8px;
+  }
 
-    a {
-      color: white;
-      margin-left: 10px;
-      cursor: pointer;
-    }
+  .buttonText {
+    padding-top: 8px;
+    height: 45px;
+    display: inline-block;
+    margin-left: 10px;
   }
 }
 
@@ -271,13 +293,14 @@ crouton-page-title {
   width: 100%;
 
   .pageTitle{
-    padding: 0px 20px 20px 20px;
+    padding: 0px 20px 40px 20px;
     font-size: 28px;
     color: @fc-title;
-    margin-left: 20px;
+    margin-left: 100px;
     font-weight: lighter;
     text-transform: capitalize;
-    text-align: right;
+    text-align: left;
+    margin-top: -2px;
 
     .navTab {
       margin-left: 10px;

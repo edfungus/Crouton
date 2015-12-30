@@ -41,9 +41,6 @@ dom-module(id="crouton-simple-slider")
         observers: [
           'newValues(endPointJson.values.*)'
         ],
-        ready: function(){
-          this.mainSliderId = "mainSlider"+this.deviceName+this.endPointName;
-        },
         attached: function(){
           this.mqtt = document.getElementById("crouton-mqtt");
           this.slider = this.$.slider;
