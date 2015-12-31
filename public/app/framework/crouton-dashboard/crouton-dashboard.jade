@@ -5,7 +5,7 @@ dom-module(id="crouton-dashboard")
   template
     link(rel="stylesheet", href="crouton-dashboard.css")
     template(is="dom-if" if="{{!numberOfCards}}")
-      div.noCards Uh oh, no devices to display
+      div(on-click="test").noCards Uh oh, no devices to display
     div#crouton-dashboard-container
 
 
@@ -80,13 +80,15 @@ dom-module(id="crouton-dashboard")
           }
           this.relayout();
         },
-        removeDeviceEndPoint: function(device,address){
+        removeDeviceEndPoint: function(device,address,alreadyRemoved){
           this.pckry.remove(this.cardIndex[device+address]);
           this.relayout();
 
           delete this.cardIndex[device+address];
           delete this.cardValues[device+address];
-          this.numberOfCards = this.numberOfCards - 1;
+          if(!alreadyRemoved){
+            this.numberOfCards = this.numberOfCards - 1;
+          }
         },
         displayCheck: function(newValue){
           if(newValue == "dashboard"){
@@ -124,6 +126,9 @@ dom-module(id="crouton-dashboard")
           } else {
             this.async(this.addPackeryCards,100);
           }
+        },
+        test: function(){
+          console.log(this.numberOfCards);
         }
       });
     }());

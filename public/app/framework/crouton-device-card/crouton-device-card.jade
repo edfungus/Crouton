@@ -79,10 +79,15 @@ dom-module(id="crouton-device-card")
         },
         removeDevice: function(){
           this.devicesCard.removeDevice(this.deviceName);
-          this.connectionStatus = "not connected";
+          this.alreadyRemoved = false;
+          if(this.connectionStatus == "not connected"){
+            this.alreadyRemoved = true;
+          } else {
+            this.connectionStatus = "not connected";
+          }
           this.fire('makeToast', { message: "Device <b>" + this.deviceName + "</b> has been removed", duration: 3000, status: "exclamation-circle" });
           this.mqttCard.unsubscribeAddress("/outbox/" + this.deviceName + "/deviceInfo");
-          this.unsubscribeDevice();
+          this.unsubscribeDevice(this.alreadyRemoved);
         },
         connectDevice: function(){
           this.connectionStatus = "connecting";
@@ -108,12 +113,13 @@ dom-module(id="crouton-device-card")
             }
           }
         },
-        unsubscribeDevice: function(){
+        unsubscribeDevice: function(alreadyRemoved){
+          alreadyRemoved = alreadyRemoved || false;
           this.mqttCard.unsubscribeAddress("/outbox/" + this.deviceName + "/lwt");
           for (var address in this.deviceJson.endPoints){
             if (this.deviceJson.endPoints.hasOwnProperty(address)) {
               this.mqttCard.unsubscribeAddress("/outbox/" + this.deviceName + "/" + address);
-              this.croutonDashboard.removeDeviceEndPoint(this.deviceName,address);
+              this.croutonDashboard.removeDeviceEndPoint(this.deviceName,address,alreadyRemoved);
             }
           }
         },
