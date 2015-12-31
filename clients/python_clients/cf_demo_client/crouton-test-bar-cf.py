@@ -14,9 +14,9 @@ def hello_world():
     global device
     return "crouton-demo ... <b>" + connectionStatus + "</b><br><br>The current JSON used is:<br>" + json.dumps(device)
 
-def updateValue(endpoint,value):
+def updateValue(endpoint,valueKey,value):
     global device
-    device["deviceInfo"]["endPoints"][endpoint]["values"]["value"] = value
+    device["deviceInfo"]["endPoints"][endpoint]["values"][valueKey] = value
 
 #callback when we recieve a connack
 def on_connect(client, userdata, flags, rc):
@@ -42,8 +42,9 @@ def on_message(client, userdata, msg):
         #currently only echoing to simulate turning on the lights successfully
         #turn on light here and if success, do the following..
         client.publish("/outbox/"+clientName+"/"+address, str(msg.payload))
-        newValue = json.loads(msg.payload)["value"]
-        updateValue(address,newValue)
+        newJson = json.loads(msg.payload)
+        for key, value in newJson.iteritems():
+            updateValue(address,key,value)
 
 
     if box == "inbox" and address == "reset":
@@ -68,12 +69,14 @@ def on_message(client, userdata, msg):
         client.publish("/outbox/"+clientName+"/backDoorLock", '{"value":false}')
         client.publish("/outbox/"+clientName+"/barLightLevel", '{"value":30}')
         client.publish("/outbox/"+clientName+"/customMessage", '{"value":"Happy Hour is NOW!"}')
-        updateValue("drinks",0)
-        updateValue("barDoor",34)
-        updateValue("danceLights",True)
-        updateValue("backDoorLock",False)
-        updateValue("barLightLevel",30)
-        updateValue("customMessage","Happy Hour is NOW!")
+        client.publish("/outbox/"+clientName+"/discoLights", '{"red":0,"green":0,"blue":0}')
+
+        updateValue("drinks","value",0)
+        updateValue("barDoor","value",34)
+        updateValue("danceLights","value",True)
+        updateValue("backDoorLock","value",False)
+        updateValue("barLightLevel","value",30)
+        updateValue("customMessage","value","Happy Hour is NOW!")
         print "Reseting values...."
 
 def startup():
@@ -117,7 +120,7 @@ def update_values():
         barDoor = barDoor + 1 #increment value by one
         client.publish("/outbox/"+clientName+"/barDoor", '{"value":'+str(barDoor)+'}')
         barDoorDelay = counter + 5 #wait 5 seconds for next increment
-        updateValue("barDoor",barDoor)
+        updateValue("barDoor","value",barDoor)
         # print "barDoor is now: " + str(barDoor)
 
     #drinks
@@ -125,7 +128,7 @@ def update_values():
         drinks = drinks + 1 #increment value by one
         client.publish("/outbox/"+clientName+"/drinks", '{"value":'+str(drinks)+'}')
         drinksDelay = counter + int(random.random()*5) #wait 5 seconds for next increment
-        updateValue("drinks",drinks)
+        updateValue("drinks","value",drinks)
         # print "drinks is now: " + str(drinks)
 
     counter = counter + 1
@@ -240,6 +243,17 @@ if __name__ == '__main__':
                     "units": "percent",
                     "card-type": "crouton-simple-slider",
                     "title": "Bar Light Brightness"
+                },
+                "discoLights": {
+                    "values": {
+                        "red": 0,
+                        "green": 0,
+                        "blue": 0
+                    },
+                    "min": 0,
+                    "max": 255,
+                    "card-type": "crouton-rgb-slider",
+                    "title": "RGB Lights"
                 }
             },
             "description": "Kroobar's IOT devices"
