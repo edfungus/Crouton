@@ -239,7 +239,7 @@ crouton-simple-[card type]
 
 ### Simple Text
 
-![Crouton-simple-text](/static/common/images/crouton-simple-text.png) Simple text is used to display a value (text or number) on the dashboard from the device to Crouton.
+![Crouton-simple-text](/static/common/images/crouton-simple-text.png) </br> Simple text is used to display a value (text or number) on the dashboard from the device to Crouton.
 
 ```json
 Device -> Crouton
@@ -258,7 +258,7 @@ Example:
 
 ### Simple Input
 
-![Crouton-simple-text](/static/common/images/crouton-simple-input.png) Simple input is similar to simple text except the user can update the value on the device from Crouton. There is no length restriction of the value by Crouton.
+![Crouton-simple-text](/static/common/images/crouton-simple-input.png) </br> Simple input is similar to simple text except the user can update the value on the device from Crouton. There is no length restriction of the value by Crouton.
 
 ```json
 Device <-> Crouton
@@ -276,7 +276,7 @@ Example:
 
 ### Simple Slider
 
-![Crouton-simple-text](/static/common/images/crouton-simple-slider.png) Simple slider allows the user to select continuous values within a given range. Both the large number and the slider will attempt the give the real device value at all times except when the user is sliding.
+![Crouton-simple-text](/static/common/images/crouton-simple-slider.png) </br> Simple slider allows the user to select continuous values within a given range. Both the large number and the slider will attempt the give the real device value at all times except when the user is sliding.
 
 ```json
 Device <-> Crouton
@@ -297,7 +297,7 @@ Example:
 
 ### Simple Button
 
-![Crouton-simple-text](/static/common/images/crouton-simple-button.png) Simple button is one directional, sending a signal (with no meaningful value) from Crouton to the device. However, this is still a bi-directional card because the button is only enable if value is *true*. If the device updates the value of the card to *false*, the button will be disabled.
+![Crouton-simple-text](/static/common/images/crouton-simple-button.png) </br> Simple button is one directional, sending a signal (with no meaningful value) from Crouton to the device. However, this is still a bi-directional card because the button is only enable if value is *true*. If the device updates the value of the card to *false*, the button will be disabled.
 
 ```json
 Device <-> Crouton
@@ -318,7 +318,7 @@ Example:
 
 ### Simple Toggle
 
-![Crouton-simple-text](/static/common/images/crouton-simple-toggle.png) Simple toggle allows a boolean value to be changed by both Crouton and the device. In the larger value display, priority for display is icon, labels, boolean text. If no labels or icons are given, the words true and false will be used. The labels around the toggle is only defined by *labels* object.
+![Crouton-simple-text](/static/common/images/crouton-simple-toggle.png) </br> Simple toggle allows a boolean value to be changed by both Crouton and the device. In the larger value display, priority for display is icon, labels, boolean text. If no labels or icons are given, the words true and false will be used. The labels around the toggle is only defined by *labels* object.
 
 ```json
 Device <-> Crouton
@@ -339,5 +339,31 @@ Example:
   },
   "card-type": "crouton-simple-toggle", [required]
   "title": "Employee Door" [optional]
+}
+```
+
+## Advanced cards
+
+These cards are a little bit more specific to certain applications.
+
+### RGB Slider
+
+![Crouton-rgb-slider](/static/common/images/crouton-rgb-slider.png) </br> RGB slider is three combined slider for the specific application of controlling a RGB led. Prepopulate the values for red, green and blue by setting in values.
+
+```json
+Device <-> Crouton
+Name: crouton-rgb-slider
+
+Example:
+"discoLights": {
+  "values": {
+    "red": 0, [required]
+    "green": 0, [required]
+    "blue": 0 [required]
+  },
+  "min": 0, [required]
+  "max": 255, [required]
+  "card-type": "crouton-rgb-slider", [required]
+  "title": "RGB Lights" [optional]
 }
 ```

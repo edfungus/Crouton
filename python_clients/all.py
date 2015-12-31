@@ -108,7 +108,6 @@ j = """
                 },
                 "min": 0,
                 "max": 255,
-                "units": "",
                 "card-type": "crouton-rgb-slider",
                 "title": "RGB Lights"
             }
