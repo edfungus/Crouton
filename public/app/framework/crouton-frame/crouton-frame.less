@@ -138,24 +138,31 @@ crouton-navigation {
 }
 
 #logoTab {
-  width: 100%;
   z-index: 1001;
   top: 0px;
+  display: inline-block;
+  margin-bottom: 20px;
 
-  .logoText {
-    position: absolute;
-    top: 25px;
-    left: 40px;
-    width: 100px;
-    background-color: @nav-bg;
-    padding: 5px;
-    font-size: 19px;
-    font-weight: normal;
-    text-align: center;
-    color: white;
-    border-bottom: solid 4px @nav-bg;
-    padding-top: 8px;
-    cursor: default;
+  .logoHolder {
+    width: 120px; 
+    height: 30px;
+    display: inline-block;
+
+    .logoText {
+      position: absolute;
+      top: 25px;
+      left: 40px;
+      width: 100px;
+      background-color: @nav-bg;
+      padding: 5px;
+      font-size: 19px;
+      font-weight: normal;
+      text-align: center;
+      color: white;
+      border-bottom: solid 4px @nav-bg;
+      padding-top: 8px;
+      cursor: default;
+    }
   }
 
   .logInText {
@@ -188,7 +195,6 @@ crouton-navigation {
     top: 25px;
     right: 40px;
     text-align: center;
-    padding-top: 8px;
   }
 
   .buttonText {
@@ -286,19 +292,20 @@ crouton-container {
   }
 }
 
-crouton-page-title {
-  display: block;
-  width: 100%;
+#crouton-page-navigation {
+  white-space: nowrap;
+  display: inline;
+  position: relative;
 
-  .pageTitle{
-    padding: 0px 20px 40px 20px;
+  .navbar{
+    padding: 0px 191px 40px 0px;
     font-size: 28px;
     color: @fc-title;
-    margin-left: 100px;
+    margin-top: -2px;
     font-weight: lighter;
     text-transform: capitalize;
     text-align: left;
-    margin-top: -2px;
+    display: inline-block;
 
     .navTab {
       margin-left: 10px;
@@ -314,8 +321,23 @@ crouton-page-title {
         font-weight: 400;
         border-bottom: 3px solid @nav-bg;
       }
-
     }
+  }
+}
+
+crouton-page-title {
+  display: block;
+  width: 100%;
+
+  .pageTitle{
+    padding: 0px 20px 40px 20px;
+    font-size: 28px;
+    color: @fc-title;
+    margin: -2px 160px 0px 100px;
+    font-weight: lighter;
+    text-transform: capitalize;
+    text-align: left;
+    display: inline-block;
 
     @media only screen and (max-width: @screen-mobile) {
       margin-left: 0px;
