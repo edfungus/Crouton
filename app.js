@@ -66,6 +66,19 @@ app.get('/app-render/framework/**/*.jade', function (req, res) {
 app.get('/app-render/dashboard-elements/**/*.jade', function (req, res) {
   res.render("dashboard-elements/"+req.params[0]+"/"+req.params[2]+".jade");
 });
+//For documentation
+app.get('/app-render/documentation/*.css', function (req, res) {
+  res.sendFile(__dirname + "/public/app/documentation/"+req.params[0]+".css");
+});
+app.get('/app-render/documentation/*.js', function (req, res) {
+  res.sendFile(__dirname + "/public/app/documentation/"+req.params[0]+".js");
+});
+app.get('/app-render/documentation/*.md', function (req, res) {
+  res.sendFile(__dirname + "/public/app/documentation/"+req.params[0]+".md");
+});
+app.get(['/documentation'], function (req, res) {
+  res.render('documentation/documentation.jade');
+});
 //404
 app.use(function(req, res, next) {
   res.redirect('/crouton/404');

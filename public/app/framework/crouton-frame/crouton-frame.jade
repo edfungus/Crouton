@@ -3,6 +3,7 @@ link(rel="import", href="/app-render/framework/crouton-card/crouton-card.jade")
 link(rel="import", href="/app-render/framework/crouton-connect-mqtt/crouton-connect-mqtt.jade")
 link(rel="import", href="/app-render/framework/crouton-devices/crouton-devices.jade")
 link(rel="import", href="/app-render/framework/crouton-dashboard/crouton-dashboard.jade")
+link(rel="import", href="/app-render/framework/crouton-getting-started/crouton-getting-started.jade")
 
 
 dom-module(id="crouton-frame")
@@ -42,8 +43,13 @@ dom-module(id="crouton-frame")
             template(is="dom-if", if="{{!isMobile}}")
               crouton-page-title.grid__col.grid__col--12-of-12
                 div.pageTitle
+                  span(data-page="gettingStarted", class$="{{selectedNavigation('gettingStarted',currentPage,'navTab')}}", on-click="changePage") Getting Started
                   span(data-page="dashboard", class$="{{selectedNavigation('dashboard',currentPage,'navTab')}}", on-click="changePage") Dashboard
                   span(data-page="connections", class$="{{selectedNavigation('connections',currentPage,'navTab')}}", on-click="changePage") Connections
+
+            //GETTING STARTED
+            div(id="gettingStarted" class$="{{selectedPage('gettingStarted',currentPage,'holder')}}")
+              crouton-getting-started
 
             // DASHBOARD
             div(id="dashboardHolder" class$="{{selectedPage('dashboard',currentPage,'holder')}}")
@@ -68,7 +74,7 @@ dom-module(id="crouton-frame")
           var that = this;
           this.urlCheck();
           this.values = {};
-          this.randomClientName = "crouton-client" + Math.floor((Math.random() * 100) + 1).toString()
+          this.randomClientName = "crouton-client" + Math.floor((Math.random() * 100) + 1).toString();
 
           if (window.matchMedia('only screen and (max-width: 668px)').matches) {
             this.isMobile = true;
@@ -153,8 +159,8 @@ dom-module(id="crouton-frame")
         urlCheck: function(event){
           var locationArray = window.location.pathname.split('/');
           if(locationArray.length <= 2){
-            window.history.replaceState({"page": "connections"}, "connections", "/crouton/connections");
-            this.currentPage = "connections";
+            window.history.replaceState({"page": "gettingStarted"}, "gettingStarted", "/crouton/gettingStarted");
+            this.currentPage = "gettingStarted";
           } else {
             this.currentPage = locationArray[2];
           }
@@ -176,38 +182,6 @@ dom-module(id="crouton-frame")
         closeCard: function(event){
           var element = event.target.parentNode._lightParent;
           element.parentNode.removeChild(element);
-        },
-        demoCrouton: function(){
-          this.fire('makeToast', { message: "Ok, hang tight!", duration: 2000, status: "exclamation-circle" });
-          this.async(function(){
-            this.fire('makeToast', { message: "Going to <b>Connections</b> page", duration: 2000, status: "exclamation-circle" });
-            this.async(function(){
-              this.currentPage = "connections";
-              this.async(function(){
-                this.changePage("connections");
-                document.querySelector("#crouton-mqtt").connectBroker();
-                this.async(function(){
-                  this.fire('makeToast', { message: "Connected broker, now connecting <b>crouton-demo</b>", duration: 2000, status: "exclamation-circle" });
-                  this.async(function(){
-                    document.querySelector("#crouton-devices").addDemo();
-                    this.async(function(){
-                      this.fire('makeToast', { message: "Going to <b>Dashboard</b> page", duration: 2000, status: "exclamation-circle" });
-                      this.async(function(){
-                        this.currentPage = "dashboard";
-                        this.changePage("dashboard");
-                        this.async(function(){
-                          this.fire('makeToast', { message: "Have fun! Don't forget other people can see your changes!", duration: 5000 });
-                        }, 1000);
-                      }, 1500);
-                    }, 2000);
-                  }, 2000);
-                }, 3000);
-              }, 1000);
-            }, 2000);
-          }, 2000);
-        },
-        gotoDocumentation: function(){
-          window.open("/documentation",'_blank');
         }
       });
     }());
