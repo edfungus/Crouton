@@ -46,7 +46,8 @@ app.get(['/','/crouton','/crouton/*'], function (req, res) {
     '/static/common/bower/webcomponentsjs/webcomponents-lite.js',
     '/static/common/bower/packery/dist/packery.pkgd.min.js',
     '/static/common/bower/draggabilly/dist/draggabilly.pkgd.min.js',
-    '/static/common/bower/jquery/dist/jquery.min.js'
+    '/static/common/bower/jquery/dist/jquery.min.js',
+    '/static/common/bower/chartist/dist/chartist.min.js'
   ];
   returnObj.frameworkFiles = frameworkFiles;
   returnObj.dashboardFiles = dashboardFiles;

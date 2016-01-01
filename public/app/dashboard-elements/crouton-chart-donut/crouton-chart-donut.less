@@ -1,0 +1,52 @@
+@import "./public/common/css/style.less";
+
+crouton-chart-donut{
+  width: @db-min-size;
+  min-width: @db-min-size;
+  height: @db-min-size;
+  min-height: @db-min-size;
+  display: table-row-group;
+
+  crouton-card {
+    text-align: center;
+    color: @fc-regular;
+
+    .expand {
+      margin: @dashboard-card-padding;
+      padding-top: @db-card-top-spacing;
+    }
+  }
+
+  .ct-label {
+    font-weight: 700;
+  }
+
+  .ct-series-e .ct-bar, .ct-series-e .ct-line, .ct-series-e .ct-point, .ct-series-e .ct-slice-donut {
+    stroke: rgba(69, 61, 63, 0.66);
+  }
+
+  .textDisplay {
+    position: absolute;
+    top: 81px;
+    width: 100%;
+    left: 0;
+    font-size: 30px;
+  }
+
+  .unitDisplay {
+    color: @fc-gray;
+    font-size: @db-sub-font-size;
+    position: absolute;
+    top: 118px;
+    width: 100%;
+    left: 0;
+  }
+
+  .titleDisplay {
+    font-size: @db-title-font-size;
+    bottom: @db-title-bottom;
+    left: 0px;
+    width: 100%;
+    position: absolute;
+  }
+}

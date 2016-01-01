@@ -144,6 +144,7 @@ dom-module(id="crouton-frame")
             this.hidePanel();
             document.querySelector("paper-drawer-panel").scrollTop = 0;
             window.history.pushState({"page": this.currentPage}, this.currentPage, "/crouton/" + this.currentPage);
+            this.fire("crouton-page-change", this.currentPage);
           }
         },
         //Mark current page with accent on navigation

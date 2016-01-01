@@ -1,0 +1,66 @@
+link(rel="import", href="/static/common/bower/polymer/polymer.html")
+link(rel="import", href="/app-render/framework/crouton-card/crouton-card.jade")
+
+
+dom-module(id="crouton-chart-donut")
+  template
+    link(rel="stylesheet", href="crouton-chart-donut.css")
+    link(rel="stylesheet", href="/static/common/bower/chartist/dist/chartist.min.css")
+    crouton-card
+      div.dragger
+      div.expand
+        div#chartDisplay
+        div.textDisplay {{centerMessage}}
+        div.unitDisplay {{endPointJson.units}}
+        div.titleDisplay {{endPointJson.title}}
+
+  script.
+    (function() {
+      Polymer({
+        is: "crouton-chart-donut",
+        properties: {
+          endPointJson: {
+            type: Object,
+            notify: true
+          }
+        },
+        observers: [
+          'newValues(endPointJson.values.*)'
+        ],
+        attached: function(){
+          this.chart = new Chartist.Pie(this.$.chartDisplay, {
+            labels: this.endPointJson.values.labels,
+            series: this.endPointJson.values.series
+          }, {
+            donut: true,
+            donutWidth: 20,
+            startAngle: 0,
+            total: this.endPointJson.total,
+            labelDirection: 'explode',
+            labelOffset: -5
+          });
+
+          var that = this;
+          document.getElementById("crouton-frame").addEventListener("crouton-page-change", function(event){
+            if(event.detail == "dashboard"){
+              that.async(function(){
+                that.chart.update();
+              },100);
+            }
+          });
+        },
+        newValues: function(changeRecord){
+          if(this.endPointJson.centerSum){
+            this.centerMessage = this.endPointJson.values.series.reduce(function(a, b) {
+              return a + b;
+            });
+          }
+          if(this.chart){
+            this.chart.update({
+              labels: this.endPointJson.values.labels,
+              series: this.endPointJson.values.series
+            });
+          }
+        }
+      });
+    }());

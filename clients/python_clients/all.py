@@ -109,7 +109,28 @@ j = """
                 "min": 0,
                 "max": 255,
                 "card-type": "crouton-rgb-slider",
-                "title": "RGB Lights"
+                "title": "Disco Lights"
+            },
+            "drinksOrdered": {
+                "values": {
+                    "labels": ["Scotch","Rum & Coke","Shiner","Margarita", "Other"],
+                    "series": [10,20,30,10,30]
+                },
+                "total": 100,
+                "centerSum": false,
+                "card-type": "crouton-chart-donut",
+                "title": "Drinks Ordered"
+            },
+            "occupancy": {
+                "values": {
+                    "labels": [],
+                    "series": [76]
+                },
+                "total": 100,
+                "centerSum": true,
+                "units": "%",
+                "card-type": "crouton-chart-donut",
+                "title": "Occupancy"
             }
         },
         "description": "Kroobar's IOT devices"
@@ -151,12 +172,16 @@ def on_message(client, userdata, msg):
         global drinks
         global drinksDelay
         global deviceJson
+        global occup
+        global occupDelay
 
         counter = 0
         barDoor = 34
         barDoorDelay = 5
         drinks = 0
         drinksDelay = int(random.random()*5)
+        occup = 76
+        occupDelay = int(random.random()*30)
         deviceJson = json.dumps(device)
         client.publish("/outbox/"+clientName+"/drinks", '{"value":0}')
         client.publish("/outbox/"+clientName+"/barDoor", '{"value":34}')
@@ -204,6 +229,8 @@ barDoor = 34
 barDoorDelay = 5
 drinks = 0
 drinksDelay = int(random.random()*5)
+occup = 76
+occupDelay = int(random.random()*30)
 
 client.loop_start()
 while True:
@@ -214,14 +241,22 @@ while True:
         barDoor = barDoor + 1 #increment value by one
         client.publish("/outbox/"+clientName+"/barDoor", '{"value":'+str(barDoor)+'}')
         barDoorDelay = counter + 5 #wait 5 seconds for next increment
-        # print "barDoor is now: " + str(barDoor)
 
     #drinks
     if(counter >= drinksDelay):
         drinks = drinks + 1 #increment value by one
         client.publish("/outbox/"+clientName+"/drinks", '{"value":'+str(drinks)+'}')
         drinksDelay = counter + int(random.random()*5) #wait 5 seconds for next increment
-        # print "drinks is now: " + str(drinks)
+
+    #occupancy
+    if(counter >= occupDelay):
+        if(occup == 76):
+            occup = 78
+        else:
+            occup = 76
+        client.publish("/outbox/"+clientName+"/occupancy", '{"series":['+str(occup)+']}')
+        occupDelay = counter + int(random.random()*30) #wait 5 seconds for next increment
+        print str(occup)
 
     counter = counter + 1
     if counter > 5000:
@@ -230,6 +265,8 @@ while True:
         barDoorDelay = 5
         drinks = 0
         drinksDelay = int(random.random()*5)
+        occup = 76
+        occupDelay = int(random.random()*30)
 
 
 #client.loop_forever()
