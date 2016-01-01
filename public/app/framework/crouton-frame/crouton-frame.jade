@@ -22,6 +22,7 @@ dom-module(id="crouton-frame")
               div.logoBarCover.dropShadow
                 i.fa.fa-rocket
             ul#navigationList
+              li(data-page="gettingStarted", class$="{{selectedNavigation('gettingStarted',currentPage)}}").primary Getting Started
               li(data-page="dashboard", class$="{{selectedNavigation('dashboard',currentPage)}}").primary Dashboard
               li(data-page="connections", class$="{{selectedNavigation('connections',currentPage)}}").primary Connections
       paper-header-panel(main, mode="waterfall")

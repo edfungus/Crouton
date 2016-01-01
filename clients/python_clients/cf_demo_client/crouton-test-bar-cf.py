@@ -288,7 +288,7 @@ if __name__ == '__main__':
                 },
                 "drinksOrdered": {
                     "values": {
-                        "labels": ["Scotch","Rum & Coke","Shiner","Margarita", "Other"],
+                        "labels": ["Scotch","Shiner","Rum & Coke","Margarita", "Other"],
                         "series": [10,20,30,10,30]
                     },
                     "total": 100,

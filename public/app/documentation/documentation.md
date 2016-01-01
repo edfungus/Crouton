@@ -342,6 +342,48 @@ Example:
 }
 ```
 
+
+## Chart cards
+
+These cards are for charts!
+
+### Donut Chart
+
+![Crouton-chart-donut-1](/static/common/images/crouton-chart-donut-1.png)
+
+![Crouton-chart-donut-1](/static/common/images/crouton-chart-donut-2.png)
+
+</br> A fairly flexible pie chart. The *labels* and *series* (values) are in arrays. The labels are optional (must have at least an empty array) and will not show if empty. *message* is displayed in the center of the donut. *centerSum* (defualt is false) sums up all of the values and replaces *message*. *total* is the value that will fill up the complete circle. If sum of *series* is beyond *total*, the extra parts will be truncated.
+
+```json
+Device -> Crouton
+Name: crouton-chart-donut
+
+Example:
+"drinksOrdered": {
+  "values": {
+    "labels": ["Scotch","Rum & Coke","Shiner","Margarita", "Other"], [required]
+    "series": [10,20,30,10,30], [required]
+    "message": "" [optional]
+  },
+  "total": 100, [required]
+  "card-type": "crouton-chart-donut",
+  "title": "Drinks Ordered" [optional]
+},
+"occupancy": {
+  "values": {
+    "labels": [], [required]
+    "series": [76] [required]
+  },
+  "total": 100, [required]
+  "centerSum": true, [optional]
+  "units": "%", [optional]
+  "card-type": "crouton-chart-donut", [required]
+  "title": "Occupancy" [optional]
+}
+```
+
+
 ## Advanced cards
 
 These cards are a little bit more specific to certain applications.

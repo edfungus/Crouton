@@ -44,6 +44,14 @@ dom-module(id="crouton-chart-donut")
             labelOffset: -5
           });
 
+          if(this.endPointJson.centerSum){
+            this.centerMessage = this.endPointJson.values.series.reduce(function(a, b) {
+              return a + b;
+            });
+          } else {
+            this.centerMessage = this.endPointJson.values.message;
+          }
+
           var that = this;
           document.getElementById("crouton-frame").addEventListener("crouton-page-change", function(event){
             if(event.detail == "dashboard"){
