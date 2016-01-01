@@ -47,6 +47,9 @@ dom-module(id="crouton-simple-slider")
           this.slider.value = this.endPointJson.values.value;
 
           var that = this;
+          this.addEventListener("change", function(event){
+            that.sendValue();
+          });
           this.addEventListener("immediate-value-change", function(event){
             that.sendValue();
           });
