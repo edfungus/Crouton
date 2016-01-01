@@ -187,7 +187,7 @@ if __name__ == '__main__':
     # global occup
     # global occupDelay
 
-    clientName = "crouton-demo2"
+    clientName = "crouton-demo"
 
     #device setup
     j = """
