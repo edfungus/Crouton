@@ -28,6 +28,10 @@ dom-module(id="crouton-chart-donut")
           'newValues(endPointJson.values.*)'
         ],
         attached: function(){
+          if(!Array.isArray(this.endPointJson.values.series) && typeof this.endPointJson.values.series === "number"){
+            this.endPointJson.values.series = [this.endPointJson.values.series];
+          }
+
           this.chart = new Chartist.Pie(this.$.chartDisplay, {
             labels: this.endPointJson.values.labels,
             series: this.endPointJson.values.series
@@ -50,7 +54,7 @@ dom-module(id="crouton-chart-donut")
           });
         },
         newValues: function(changeRecord){
-          if(this.endPointJson.centerSum){
+          if(this.endPointJson.centerSum && Array.isArray(this.endPointJson.values.series)){
             this.centerMessage = this.endPointJson.values.series.reduce(function(a, b) {
               return a + b;
             });

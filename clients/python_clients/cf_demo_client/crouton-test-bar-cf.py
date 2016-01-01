@@ -18,6 +18,23 @@ def updateValue(endpoint,valueKey,value):
     global device
     device["deviceInfo"]["endPoints"][endpoint]["values"][valueKey] = value
 
+def resetValues():
+    global counter
+    global barDoor
+    global barDoorDelay
+    global drinks
+    global drinksDelay
+    global occup
+    global occupDelay
+
+    counter = 0
+    barDoor = 34
+    barDoorDelay = 5
+    drinks = 0
+    drinksDelay = int(random.random()*5)
+    occup = 76
+    occupDelay = int(random.random()*30)
+
 #callback when we recieve a connack
 def on_connect(client, userdata, flags, rc):
     global connectionStatus
@@ -50,18 +67,17 @@ def on_message(client, userdata, msg):
     if box == "inbox" and address == "reset":
         #initial values
         global crouton
-        global barDoor
-        global barDoorDelay
-        global drinks
-        global drinksDelay
         global deviceJson
-        global counter
 
-        counter = 0
-        barDoor = 34
-        barDoorDelay = 5
-        drinks = 0
-        drinksDelay = int(random.random()*5)
+        # global counter
+        # global barDoor
+        # global barDoorDelay
+        # global drinks
+        # global drinksDelay
+        # global occup
+        # global occupDelay
+
+        resetValues()
         deviceJson = json.dumps(device)
         client.publish("/outbox/"+clientName+"/drinks", '{"value":0}')
         client.publish("/outbox/"+clientName+"/barDoor", '{"value":34}')
@@ -70,6 +86,7 @@ def on_message(client, userdata, msg):
         client.publish("/outbox/"+clientName+"/barLightLevel", '{"value":30}')
         client.publish("/outbox/"+clientName+"/customMessage", '{"value":"Happy Hour is NOW!"}')
         client.publish("/outbox/"+clientName+"/discoLights", '{"red":0,"green":0,"blue":0}')
+        client.publish("/outbox/"+clientName+"/occupancy", '{"series":[76]}')
 
         updateValue("drinks","value",0)
         updateValue("barDoor","value",34)
@@ -77,6 +94,7 @@ def on_message(client, userdata, msg):
         updateValue("backDoorLock","value",False)
         updateValue("barLightLevel","value",30)
         updateValue("customMessage","value","Happy Hour is NOW!")
+        updateValue("occupancy","series",[76])
         print "Reseting values...."
 
 def startup():
@@ -107,13 +125,16 @@ def update_values():
     global clientName
     global deviceJson
     global crouton
+    global client
+    global connectionStatus
+
+    global counter
     global barDoor
     global barDoorDelay
     global drinks
     global drinksDelay
-    global client
-    global connectionStatus
-    global counter
+    global occup
+    global occupDelay
 
     #barDoor
     if(counter >= barDoorDelay):
@@ -131,13 +152,20 @@ def update_values():
         updateValue("drinks","value",drinks)
         # print "drinks is now: " + str(drinks)
 
+    #occupany
+    if(counter >= occupDelay):
+        if(occup == 76):
+            occup = 78
+        else:
+            occup = 76
+        client.publish("/outbox/"+clientName+"/occupancy", '{"series":['+str(occup)+']}')
+        occupDelay = counter + int(random.random()*5) #wait 5 seconds for next increment
+        updateValue("occupancy","series",occup)
+        # print "drinks is now: " + str(drinks)
+
     counter = counter + 1
     if counter > 5000:
-        counter = 0
-        barDoor = 34
-        barDoorDelay = 5
-        drinks = 0
-        drinksDelay = int(random.random()*5)
+        resetValues()
 
     threading.Timer(1, update_values).start()
 
@@ -148,15 +176,18 @@ if __name__ == '__main__':
     global clientName
     global deviceJson
     global crouton
-    global barDoor
-    global barDoorDelay
-    global drinks
-    global drinksDelay
     global client
     global connectionStatus
-    global counter
 
-    clientName = "crouton-demo"
+    # global barDoor
+    # global barDoorDelay
+    # global drinks
+    # global drinksDelay
+    # global counter
+    # global occup
+    # global occupDelay
+
+    clientName = "crouton-demo2"
 
     #device setup
     j = """
@@ -254,6 +285,27 @@ if __name__ == '__main__':
                     "max": 255,
                     "card-type": "crouton-rgb-slider",
                     "title": "RGB Lights"
+                },
+                "drinksOrdered": {
+                    "values": {
+                        "labels": ["Scotch","Rum & Coke","Shiner","Margarita", "Other"],
+                        "series": [10,20,30,10,30]
+                    },
+                    "total": 100,
+                    "centerSum": false,
+                    "card-type": "crouton-chart-donut",
+                    "title": "Drinks Ordered"
+                },
+                "occupancy": {
+                    "values": {
+                        "labels": [],
+                        "series": [76]
+                    },
+                    "total": 100,
+                    "centerSum": true,
+                    "units": "%",
+                    "card-type": "crouton-chart-donut",
+                    "title": "Occupancy"
                 }
             },
             "description": "Kroobar's IOT devices"
@@ -285,11 +337,7 @@ if __name__ == '__main__':
     ### Simulated device logic below
 
     #initial values
-    counter = 0
-    barDoor = 34
-    barDoorDelay = 5
-    drinks = 0
-    drinksDelay = int(random.random()*5)
+    resetValues()
 
     client.loop_start()
     update_values()

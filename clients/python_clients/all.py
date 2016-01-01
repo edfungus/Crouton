@@ -256,7 +256,6 @@ while True:
             occup = 76
         client.publish("/outbox/"+clientName+"/occupancy", '{"series":['+str(occup)+']}')
         occupDelay = counter + int(random.random()*30) #wait 5 seconds for next increment
-        print str(occup)
 
     counter = counter + 1
     if counter > 5000:
