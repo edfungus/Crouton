@@ -1,0 +1,104 @@
+@import "./public/common/css/style.less";
+
+crouton-navigation {
+  #logoTab {
+    z-index: 1001;
+    top: 0px;
+    display: inline-block;
+    margin-bottom: 20px;
+
+    .logoHolder {
+      width: 120px;
+      height: 30px;
+      display: inline-block;
+
+      .logoText {
+        position: absolute;
+        top: 25px;
+        left: 40px;
+        width: 100px;
+        background-color: @nav-bg;
+        padding: 5px;
+        font-size: 19px;
+        font-weight: normal;
+        text-align: center;
+        color: white;
+        border-bottom: solid 4px @nav-bg;
+        padding-top: 8px;
+        cursor: default;
+      }
+    }
+
+    .logInText {
+      width: 75px;
+      // background-color: rgba(129, 181, 211, 0.64);
+      font-size: 15px;
+      font-weight: 700;
+      text-align: center;
+      // color: white;
+      color: @fc-nav-selected;
+      // border-bottom: solid 4px rgba(129, 181, 211, 0.64);
+      cursor: pointer;
+      line-height: 28px;
+    }
+
+    .signUpText {
+      width: 75px;
+      background-color: rgba(78, 205, 196, 0.64);
+      font-size: 15px;
+      font-weight: 100;
+      text-align: center;
+      color: white;
+      border-bottom: solid 4px rgb(78, 205, 196);
+      cursor: pointer;
+      line-height: 28px;
+    }
+
+    .rightSide {
+      position: absolute;
+      top: 25px;
+      right: 40px;
+      text-align: center;
+    }
+
+    .buttonText {
+      padding-top: 8px;
+      height: 45px;
+      display: inline-block;
+      margin-left: 10px;
+    }
+  }
+
+  #crouton-page-navigation {
+    white-space: nowrap;
+    display: inline;
+    position: relative;
+
+    .navbar{
+      padding: 0px 191px 40px 0px;
+      font-size: 28px;
+      color: @fc-title;
+      margin-top: -2px;
+      font-weight: lighter;
+      text-transform: capitalize;
+      text-align: left;
+      display: inline-block;
+
+      .navTab {
+        margin-left: 10px;
+        margin-right: 10px;
+        cursor: pointer;
+        border-bottom: 3px solid @nav-grey;
+
+        &:hover {
+          border-bottom: 3px solid rgba(0,0,0,.2);
+        }
+        &.active {
+          color: @fc-nav-selected;
+          font-weight: 400;
+          border-bottom: 3px solid @nav-bg;
+        }
+      }
+    }
+  }
+}

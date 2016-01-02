@@ -1,354 +1,96 @@
 @import "./public/common/css/style.less";
 
-crouton-navigation {
+crouton-frame {
   color: @fc-light;
   background-color: @nav-bg !important;
   display: block;
   height: 100vh;
 
-  .floatMiddle {
-    position: relative;
-    top: 30%;
-    transform: translateY(-30%);
-  }
 
-  .logo {
-    width: 60px;
-    height: 60px;
-    margin: 0px auto 50px auto;
-
-    .logoBar {
-      height: 15px;
-      width: 100%;
-    }
-    .logoBarCover {
-      background-color: rgba(85,98,112,1);
-      position: absolute;
-      width: 60px;
-      height: 60px;
-      z-index: 100;
-      top: 0px;
-      border-radius: 10px;
-      text-align: center;
-      font-size: 34px;
-      line-height: 58px;
-    }
-  }
-
-  #navigationList{
-    list-style-type: none;
-    text-align: center;
-    font-weight: lighter;
-    padding-left: 0px;
-
-    li {
-      padding: 5px;
-      cursor: pointer;
-      &:hover, &.active {
-        background-color: rgba(0,0,0,.1);
-      }
-      &.secondary {
-        color: rgba(255,255,255,.5);
-      }
-      &.accent {
-        background-color: @nav-accent;
-        &:hover, &.active {
-          background-color: @nav-accent-hover;
-        }
-      }
-      &.blank {
-        height: 22px;
-        cursor: auto;
-        &:hover {
-          background-color: transparent;
-        }
-      }
-
-      a {
-        color: @fc-light;
-        text-decoration: none;
-      }
-    }
-
-    @media only screen and (max-width: @screen-mobile) {
-      font-size: 16px;
-    }
-  }
-
-  .footer {
-    position: absolute;
+  crouton-container {
+    display: inline-block;
     width: 100%;
-    bottom: 0;
-    text-align: center;
-    font-size: 14px;
-    font-weight: lighter;
+    min-height: 100vh;
+    background-color: @container-bg;
+    padding: @container-padding;
+    padding-left: @container-padding - @toastcss-margin;
+    padding-top: @container-padding - 10px;
 
-    .logoText {
-      background-color: @nav-accent-dark;
-      padding: 5px;
-      font-size: 20px;
-      font-weight: normal;
+    .grid {
+      margin: 0px;
+
+      .holder {
+        margin-left: 0px;
+
+        & > p {
+          margin-top: 0px;
+          margin-left: @toastcss-margin;
+        }
+      }
+
+      &.contentMarginFix {
+        margin-left: -20px;
+        @media only screen and (max-width: @screen-mobile) {
+          margin-left: 0px;
+        }
+      }
+      &.cardMarginFix {
+        margin-left: 0px;
+        padding-left: 0px;
+        @media only screen and (max-width: @screen-mobile) {
+          margin-left: 0px;
+        }
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      @media only screen and (max-width: @screen-mobile) {
+        margin-right: @margin-mobile;
+        margin-left: @margin-mobile;
+      }
     }
-  }
 
-  @media only screen and (max-width: @screen-mobile) {
-    font-size: 16px;
-  }
-}
-
-#mobileHeader {
-  display: none;
-  background-color: @nav-bg;
-  z-index: 15;
-  width: 100%;
-  height: @nav-mobile-height;
-  top: 0px;
-  left: 0px;
-
-  .logo {
-    padding: 5px;
-    font-size: 22px;
-    font-weight: normal;
-    color:  @fc-light;
-    width: @nav-width;
-    height: 100%;
-    text-align: center;
-    margin-left: auto;
-    margin-right: auto;
-  }
-  .menuLeft, .menuRight {
-    position: absolute;
-    top: 0;
-    font-size: 22px;
-    color: @fc-light;
-    line-height: 44px;
-    text-align: left;
-    width: 100px;
-  }
-  .menuLeft {
-    left: 25px;
-  }
-  .menuRight {
-    right: 25px;
-  }
-
-  @media only screen and (max-width: @screen-mobile) {
-    display: block;
-  }
-}
-
-#logoTab {
-  z-index: 1001;
-  top: 0px;
-  display: inline-block;
-  margin-bottom: 20px;
-
-  .logoHolder {
-    width: 120px; 
-    height: 30px;
-    display: inline-block;
-
-    .logoText {
-      position: absolute;
-      top: 25px;
-      left: 40px;
-      width: 100px;
-      background-color: @nav-bg;
-      padding: 5px;
-      font-size: 19px;
-      font-weight: normal;
-      text-align: center;
-      color: white;
-      border-bottom: solid 4px @nav-bg;
-      padding-top: 8px;
-      cursor: default;
-    }
-  }
-
-  .logInText {
-    width: 75px;
-    // background-color: rgba(129, 181, 211, 0.64);
-    font-size: 15px;
-    font-weight: 700;
-    text-align: center;
-    // color: white;
-    color: @fc-nav-selected;
-    // border-bottom: solid 4px rgba(129, 181, 211, 0.64);
-    cursor: pointer;
-    line-height: 28px;
-  }
-
-  .signUpText {
-    width: 75px;
-    background-color: rgba(78, 205, 196, 0.64);
-    font-size: 15px;
-    font-weight: 100;
-    text-align: center;
-    color: white;
-    border-bottom: solid 4px rgb(78, 205, 196);
-    cursor: pointer;
-    line-height: 28px;
-  }
-
-  .rightSide {
-    position: absolute;
-    top: 25px;
-    right: 40px;
-    text-align: center;
-  }
-
-  .buttonText {
-    padding-top: 8px;
-    height: 45px;
-    display: inline-block;
-    margin-left: 10px;
-  }
-}
-
-crouton-container {
-  display: inline-block;
-  width: 100%;
-  min-height: 100vh;
-  background-color: @container-bg;
-  padding: @container-padding;
-  padding-left: @container-padding - @toastcss-margin;
-  padding-top: @container-padding - 10px;
-
-  .grid {
-    margin: 0px;
-
-    .holder {
+    .grid__col{
+      padding-left: 20px;
       margin-left: 0px;
 
-      & > p {
-        margin-top: 0px;
-        margin-left: @toastcss-margin;
-      }
-    }
-
-    &.contentMarginFix {
-      margin-left: -20px;
       @media only screen and (max-width: @screen-mobile) {
-        margin-left: 0px;
-      }
-    }
-    &.cardMarginFix {
-      margin-left: 0px;
-      padding-left: 0px;
-      @media only screen and (max-width: @screen-mobile) {
-        margin-left: 0px;
+        padding-left: 0px;
       }
     }
 
-    .hidden {
-      display: none;
+    .grid__col--centered {
+      margin-left: auto;
     }
 
-    @media only screen and (max-width: @screen-mobile) {
-      margin-right: @margin-mobile;
-      margin-left: @margin-mobile;
+    .frameHolder {
+      .cardInner {
+        padding: 0px;
+      }
     }
-  }
-
-  .grid__col{
-    padding-left: 20px;
-    margin-left: 0px;
-
-    @media only screen and (max-width: @screen-mobile) {
-      padding-left: 0px;
-    }
-  }
-
-  .grid__col--centered {
-    margin-left: auto;
-  }
-
-  .frameHolder {
-    .cardInner {
-      padding: 0px;
-    }
-  }
-
-  .customToast{
-    z-index: 100;
-    left: 20px;
-
-    i.toastIcon {
-      font-size: 18px;
-      margin-right: 7px;
-    }
-
-    a{
-      color: @fc-accent;
-    }
-  }
-
-  @media only screen and (max-width: @screen-mobile) {
-    padding: @container-padding-mobile;
 
     .customToast{
-      left: 5px;
-    }
-  }
-}
+      z-index: 100;
+      left: 20px;
 
-#crouton-page-navigation {
-  white-space: nowrap;
-  display: inline;
-  position: relative;
-
-  .navbar{
-    padding: 0px 191px 40px 0px;
-    font-size: 28px;
-    color: @fc-title;
-    margin-top: -2px;
-    font-weight: lighter;
-    text-transform: capitalize;
-    text-align: left;
-    display: inline-block;
-
-    .navTab {
-      margin-left: 10px;
-      margin-right: 10px;
-      cursor: pointer;
-      border-bottom: 3px solid @nav-grey;
-
-      &:hover {
-        border-bottom: 3px solid rgba(0,0,0,.2);
+      i.toastIcon {
+        font-size: 18px;
+        margin-right: 7px;
       }
-      &.active {
-        color: @fc-nav-selected;
-        font-weight: 400;
-        border-bottom: 3px solid @nav-bg;
+
+      a{
+        color: @fc-accent;
       }
     }
-  }
-}
-
-crouton-page-title {
-  display: block;
-  width: 100%;
-
-  .pageTitle{
-    padding: 0px 20px 40px 20px;
-    font-size: 28px;
-    color: @fc-title;
-    margin: -2px 160px 0px 100px;
-    font-weight: lighter;
-    text-transform: capitalize;
-    text-align: left;
-    display: inline-block;
 
     @media only screen and (max-width: @screen-mobile) {
-      margin-left: 0px;
-      margin-top: 10px;
-    }
-  }
-}
+      padding: @container-padding-mobile;
 
-crouton-navigation {
-  display: none;
-  @media only screen and (max-width: @screen-mobile) {
-    display: block;
+      .customToast{
+        left: 5px;
+      }
+    }
   }
 }

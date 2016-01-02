@@ -95,12 +95,6 @@ dom-module(id="crouton-getting-started")
     (function() {
       Polymer({
         is: "crouton-getting-started",
-        attached: function(){
-          this.mainFrame = document.getElementById("crouton-frame");
-        },
-        changePage: function(event){
-          this.mainFrame.changePage(event);
-        },
         gotoGithub: function(){
           window.open("https://github.com/edfungus/Crouton", "_blank");
         },
@@ -118,9 +112,8 @@ dom-module(id="crouton-getting-started")
           this.async(function(){
             this.fire('makeToast', { message: "Going to <b>Connections</b> page", duration: 2000, status: "exclamation-circle" });
             this.async(function(){
-              this.mainFrame.currentPage = "connections";
               this.async(function(){
-                this.mainFrame.changePage("connections");
+                this.goToConnection();
                 document.getElementById("crouton-mqtt").connectBroker();
                 this.async(function(){
                   this.fire('makeToast', { message: "Connected broker, now connecting <b>crouton-demo</b>", duration: 2000, status: "exclamation-circle" });
@@ -129,8 +122,7 @@ dom-module(id="crouton-getting-started")
                     this.async(function(){
                       this.fire('makeToast', { message: "Going to <b>Dashboard</b> page", duration: 2000, status: "exclamation-circle" });
                       this.async(function(){
-                        this.mainFrame.currentPage = "dashboard";
-                        this.mainFrame.changePage("dashboard");
+                        this.goToDashboard();
                         this.async(function(){
                           this.fire('makeToast', { message: "Have fun! Don't forget other people can see your changes!", duration: 5000 });
                         }, 1000);

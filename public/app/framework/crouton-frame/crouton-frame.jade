@@ -3,68 +3,37 @@ link(rel="import", href="/app-render/framework/crouton-card/crouton-card.jade")
 link(rel="import", href="/app-render/framework/crouton-connect-mqtt/crouton-connect-mqtt.jade")
 link(rel="import", href="/app-render/framework/crouton-devices/crouton-devices.jade")
 link(rel="import", href="/app-render/framework/crouton-dashboard/crouton-dashboard.jade")
+link(rel="import", href="/app-render/framework/crouton-navigation/crouton-navigation.jade")
 link(rel="import", href="/app-render/framework/crouton-getting-started/crouton-getting-started.jade")
 
 
 dom-module(id="crouton-frame")
   template
     link(rel="stylesheet", href="crouton-frame.css")
-    template(is="dom-if", if="{{isMobile}}")
-      link(rel="import", href="/static/common/bower/paper-drawer-panel/paper-drawer-panel.html")
-      link(rel="import", href="/static/common/bower/paper-header-panel/paper-header-panel.html")
-    paper-drawer-panel(drawer-width="160px")#app
-      div(drawer)
-        crouton-navigation
-          div.footer
-            div.logoText Crouton
-          div.floatMiddle
-            div.logo
-              div.logoBarCover.dropShadow
-                i.fa.fa-rocket
-            ul#navigationList
-              li(data-page="gettingStarted", class$="{{selectedNavigation('gettingStarted',currentPage)}}").primary Getting Started
-              li(data-page="dashboard", class$="{{selectedNavigation('dashboard',currentPage)}}").primary Dashboard
-              li(data-page="connections", class$="{{selectedNavigation('connections',currentPage)}}").primary Connections
-      paper-header-panel(main, mode="waterfall")
-        div(class="paper-header")#mobileHeader
-          div.logo #[span Crouton]
-          div(paper-drawer-toggle).menuLeft #[i(paper-drawer-toggle).fa.fa-bars]
-        crouton-container
-          div.grid
-            div#toasts
+    crouton-container
+      div.grid
+        div#toasts
 
-            template(is="dom-if", if="{{isMobile}}")
-              crouton-page-title.grid__col.grid__col--12-of-12 #[div.pageTitle {{currentPage}}]
-            template(is="dom-if", if="{{!isMobile}}")
-              div#logoTab
-                div.logoHolder
-                  div.logoText Crouton
-                div.rightSide
-                  div.buttonText.signUpText Sign up
-                  div.buttonText.logInText Log in
-              div#crouton-page-navigation.grid__col.grid__col--12-of-12
-                div.navbar
-                  span(data-page="gettingStarted", class$="{{selectedNavigation('gettingStarted',currentPage,'navTab')}}", on-click="changePage") Getting Started
-                  span(data-page="dashboard", class$="{{selectedNavigation('dashboard',currentPage,'navTab')}}", on-click="changePage") Dashboard
-                  span(data-page="connections", class$="{{selectedNavigation('connections',currentPage,'navTab')}}", on-click="changePage") Connections
+        //NAVIGATION
+        crouton-navigation#crouton-navigation(current-page="{{currentPage}}")
 
-            //GETTING STARTED
-            div(id="gettingStarted" class$="{{selectedPage('gettingStarted',currentPage,'holder')}}")
-              crouton-getting-started
+        //GETTING STARTED
+        div(id="gettingStarted" class$="{{selectedPage('gettingStarted',currentPage,'holder')}}")
+          crouton-getting-started
 
-            // DASHBOARD
-            div(id="dashboardHolder" class$="{{selectedPage('dashboard',currentPage,'holder')}}")
-              template(is="dom-if", if="{{!mqttConnected}}")
-                crouton-card(drop-shadow="false", bottom-bar="false").danger.grid__col.grid__col--12-of-12 Please connect to MQTT Broker in #[span(data-page="connections", on-click="changePage").link Connections]
-              crouton-dashboard(current-page="{{currentPage}}")#crouton-dashboard
+        // DASHBOARD
+        div(id="dashboardHolder" class$="{{selectedPage('dashboard',currentPage,'holder')}}")
+          template(is="dom-if", if="{{!mqttConnected}}")
+            crouton-card(drop-shadow="false", bottom-bar="false").danger.grid__col.grid__col--12-of-12 Please connect to MQTT Broker in #[span(data-page="connections", on-click="changePage").link Connections]
+          crouton-dashboard(current-page="{{currentPage}}")#crouton-dashboard
 
-            // CONNECTIONS
-            div(class$="{{selectedPage('connections',currentPage,'holder')}}")
-              template(is="dom-if", if="{{!mqttConnected}}")
-                crouton-card(drop-shadow="false", bottom-bar="false").danger.grid__col.grid__col--12-of-12 Please connect to MQTT Broker below
-              template(is="dom-if", if="{{mqttConnected}}")
-                crouton-devices#crouton-devices
-              crouton-connect-mqtt#crouton-mqtt(address="test.mosquitto.org", port="8080", client-name="{{randomClientName}}")
+        // CONNECTIONS
+        div(class$="{{selectedPage('connections',currentPage,'holder')}}")
+          template(is="dom-if", if="{{!mqttConnected}}")
+            crouton-card(drop-shadow="false", bottom-bar="false").danger.grid__col.grid__col--12-of-12 Please connect to MQTT Broker below
+          template(is="dom-if", if="{{mqttConnected}}")
+            crouton-devices#crouton-devices
+          crouton-connect-mqtt#crouton-mqtt(address="test.mosquitto.org", port="8080", client-name="{{randomClientName}}")
 
 
   script.
@@ -73,20 +42,15 @@ dom-module(id="crouton-frame")
         is: "crouton-frame",
         ready: function() {
           var that = this;
-          this.urlCheck();
           this.values = {};
           this.randomClientName = "crouton-client" + Math.floor((Math.random() * 100) + 1).toString();
 
-          if (window.matchMedia('only screen and (max-width: 668px)').matches) {
-            this.isMobile = true;
-          } else {
-            this.isMobile = false;
-          }
-
-          addEventListener('popstate', this.urlCheck.bind(this));
-          this.addEventListener('crouton-changePage', function(event){
-            that.changePage(event.detail.page);
-          });
+          //todo: implement mobile compatibility
+          // if (window.matchMedia('only screen and (max-width: 668px)').matches) {
+          //   this.isMobile = true;
+          // } else {
+          //   this.isMobile = false;
+          // }
 
           this.toastContainer = document.getElementById("toasts");
           addEventListener('makeToast', function(event){
@@ -120,52 +84,6 @@ dom-module(id="crouton-frame")
 
         },
         properties: {
-          currentPage: {
-            type: String,
-            value: ''
-          },
-          isMobile: {
-            type: Boolean
-          }
-        },
-        listeners: {
-          'navigationList.tap' : 'changePage'
-        },
-        //Change navigation page
-        changePage: function(event){
-          if(typeof event == "string"){
-            var newPage = event;
-          } else if(event.target.attributes['data-page'] != null){
-            var newPage = event.target.attributes['data-page'].value;
-          } else {
-            return
-          }
-          if(newPage != this.currentPage){
-            this.currentPage = newPage;
-            this.hidePanel();
-            document.querySelector("paper-drawer-panel").scrollTop = 0;
-            window.history.pushState({"page": this.currentPage}, this.currentPage, "/crouton/" + this.currentPage);
-            this.fire("crouton-page-change", this.currentPage);
-          }
-        },
-        //Mark current page with accent on navigation
-        selectedNavigation: function(name, current, extra){
-          extra = extra ? ' ' + extra : ' ';
-          if(name === current){
-            return "active" + extra
-          } else {
-            return "" + extra
-          }
-        },
-        //Make sure we are on the right page from URL
-        urlCheck: function(event){
-          var locationArray = window.location.pathname.split('/');
-          if(locationArray.length <= 2){
-            window.history.replaceState({"page": "gettingStarted"}, "gettingStarted", "/crouton/gettingStarted");
-            this.currentPage = "gettingStarted";
-          } else {
-            this.currentPage = locationArray[2];
-          }
         },
         selectedPage: function(name, current, extra) {
           extra = extra ? ' ' + extra : ' ';
@@ -173,12 +91,6 @@ dom-module(id="crouton-frame")
             return "" + extra
           } else {
             return "hidden" + extra
-          }
-        },
-        //Hide the side panel
-        hidePanel: function(event) {
-          if(this.isMobile){
-            this.$.app.closeDrawer();
           }
         },
         closeCard: function(event){
