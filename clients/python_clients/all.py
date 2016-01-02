@@ -131,6 +131,16 @@ j = """
                 "units": "%",
                 "card-type": "crouton-chart-donut",
                 "title": "Occupancy"
+            },
+            "temperature": {
+                "values": {
+                    "labels": [],
+                    "series": [[]],
+                    "update": {"labels":12,"series":23}
+                },
+                "max": 10,
+                "card-type": "crouton-chart-line",
+                "title": "Temperature"
             }
         },
         "description": "Kroobar's IOT devices"
@@ -246,6 +256,10 @@ while True:
     if(counter >= drinksDelay):
         drinks = drinks + 1 #increment value by one
         client.publish("/outbox/"+clientName+"/drinks", '{"value":'+str(drinks)+'}')
+        # client.publish("/outbox/"+clientName+"/temperature", '{"labels":[1,2],"series":[5,10]}')
+        # client.publish("/outbox/"+clientName+"/temperature", '{"update": {"labels":[12,12],"series":[[23,12]]}}')
+        client.publish("/outbox/"+clientName+"/temperature", '{"update": {"labels":[12],"series":[[23],[10]]}}')
+        # client.publish("/outbox/"+clientName+"/temperature", '{"update": {"labels":[12,13],"series":[[23,2],[10,3]]}}')
         drinksDelay = counter + int(random.random()*5) #wait 5 seconds for next increment
 
     #occupancy

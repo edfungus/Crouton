@@ -39,7 +39,8 @@ app.get(['/','/crouton','/crouton/*'], function (req, res) {
     '/static/common/bower/font-awesome/css/font-awesome.min.css',
     '/static/common/css/toast.css',
     '/static/common/css/style.css',
-    '/static/common/css/tmpl.css'
+    '/static/common/css/tmpl.css',
+    '/static/common/bower/chartist/dist/chartist.min.css'
   ];
   returnObj.jsExternal = [
     '/static/common/js/browserMqtt.js',
