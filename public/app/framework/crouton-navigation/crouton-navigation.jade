@@ -8,8 +8,8 @@ dom-module(id="crouton-navigation")
       div.logoHolder
         div.logoText Crouton
       div.rightSide
-        div.buttonText.signUpText Sign up
-        div.buttonText.logInText Log in
+        div(on-click="comingSoon").buttonText.signUpText Sign up
+        div(on-click="comingSoon").buttonText.logInText Log in
     div#crouton-page-navigation.grid__col.grid__col--12-of-12
       div.navbar
         span(data-page="gettingStarted", class$="{{selectedNavigation('gettingStarted',currentPage,'navTab')}}", on-click="changePage") Getting Started
@@ -73,5 +73,8 @@ dom-module(id="crouton-navigation")
             this.currentPage = locationArray[2];
           }
         },
+        comingSoon: function(){
+          this.fire('makeToast', { message: "This feature is coming soon!", duration: 2000, status: "exclamation-circle" });
+        }
       });
     }());
