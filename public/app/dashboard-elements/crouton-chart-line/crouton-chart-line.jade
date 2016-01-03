@@ -65,17 +65,17 @@ dom-module(id="crouton-chart-line")
               if(Array.isArray(this.endPointJson.values.update.series) && !Array.isArray(this.endPointJson.values.update.series[0])){
                 this.endPointJson.values.update.series = [this.endPointJson.values.update.series];
               }
-              for(var i = 0; i < this.endPointJson.values.update.series.length; i++){
-                this.endPointJson.values.series[i] = this.endPointJson.values.series[i].concat(this.endPointJson.values.update.series[i]);
-              }
+              // for(var i = 0; i < this.endPointJson.values.update.series.length; i++){
+              //   this.endPointJson.values.series[i] = this.endPointJson.values.series[i].concat(this.endPointJson.values.update.series[i]);
+              // }
 
               console.log(this.endPointJson.values.series);
               // console.log(this.endPointJson.values.labels);
 
-              // this.chart.update({
-              //   labels: this.endPointJson.values.labels,
-              //   series: this.endPointJson.values.series
-              // });
+              this.chart.update({
+                labels: [1,2,3],//this.endPointJson.values.labels,
+                series: [[23,24,25],[10,11,12]]//this.endPointJson.values.series
+              });
 
             } else {
               this.checksInput();

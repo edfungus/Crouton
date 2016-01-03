@@ -135,8 +135,7 @@ j = """
             "temperature": {
                 "values": {
                     "labels": [],
-                    "series": [[]],
-                    "update": {"labels":12,"series":23}
+                    "series": [[]]
                 },
                 "max": 10,
                 "card-type": "crouton-chart-line",
