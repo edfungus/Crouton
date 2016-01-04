@@ -27,15 +27,20 @@ dom-module(id="crouton-chart-line")
         attached: function(){
           this.checksInput();
 
+          var options = {
+            fullWidth: true
+          }
+          if(this.endPointJson.low){
+            options.low = this.endPointJson.low;
+          }
+          if(this.endPointJson.high){
+            options.high = this.endPointJson.high;
+          }
+
           this.chart = new Chartist.Line(this.$.chartDisplay, {
             labels: this.endPointJson.values.labels,
             series: this.endPointJson.values.series
-          }, {
-              // lineSmooth: Chartist.Interpolation.cardinal({
-              //   tension: 0.2
-              // }),
-            fullWidth: true
-          });
+          },options);
 
           var that = this;
           document.getElementById("crouton-frame").addEventListener("crouton-page-change", function(event){
@@ -65,16 +70,21 @@ dom-module(id="crouton-chart-line")
               if(Array.isArray(this.endPointJson.values.update.series) && !Array.isArray(this.endPointJson.values.update.series[0])){
                 this.endPointJson.values.update.series = [this.endPointJson.values.update.series];
               }
-              // for(var i = 0; i < this.endPointJson.values.update.series.length; i++){
-              //   this.endPointJson.values.series[i] = this.endPointJson.values.series[i].concat(this.endPointJson.values.update.series[i]);
-              // }
-
-              console.log(this.endPointJson.values.series);
-              // console.log(this.endPointJson.values.labels);
+              //Adds new value to the respective lines
+              for(var i = 0; i < this.endPointJson.values.update.series.length; i++){
+                this.endPointJson.values.series[i] = this.endPointJson.values.series[i].concat(this.endPointJson.values.update.series[i]);
+              }
+              //Make sure each line is truncated to the max value
+              if(this.endPointJson.max){
+                for(var i = 0; i < this.endPointJson.values.series.length; i++){
+                  this.endPointJson.values.series[i] = this.endPointJson.values.series[i].slice(Math.max(this.endPointJson.values.series[i].length-this.endPointJson.max,0))
+                }
+                this.endPointJson.values.labels = this.endPointJson.values.labels.slice(Math.max(this.endPointJson.values.labels.length-this.endPointJson.max,0))
+              }
 
               this.chart.update({
-                labels: [1,2,3],//this.endPointJson.values.labels,
-                series: [[23,24,25],[10,11,12]]//this.endPointJson.values.series
+                labels: this.endPointJson.values.labels,
+                series: this.endPointJson.values.series
               });
 
             } else {

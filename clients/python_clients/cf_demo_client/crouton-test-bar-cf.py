@@ -26,6 +26,9 @@ def resetValues():
     global drinksDelay
     global occup
     global occupDelay
+    global temp
+    global tempDelay
+    global tempArray
 
     counter = 0
     barDoor = 34
@@ -34,6 +37,9 @@ def resetValues():
     drinksDelay = int(random.random()*5)
     occup = 76
     occupDelay = int(random.random()*30)
+    temp = 0
+    tempDelay = 3
+    tempArray = [60,62,61,62,63,65,68,67,68,71,69,65,66,62,61]
 
 #callback when we recieve a connack
 def on_connect(client, userdata, flags, rc):
@@ -135,6 +141,9 @@ def update_values():
     global drinksDelay
     global occup
     global occupDelay
+    global temp
+    global tempDelay
+    global tempArray
 
     #barDoor
     if(counter >= barDoorDelay):
@@ -151,6 +160,14 @@ def update_values():
         drinksDelay = counter + int(random.random()*5) #wait 5 seconds for next increment
         updateValue("drinks","value",drinks)
         # print "drinks is now: " + str(drinks)
+
+    #temperature
+    if(counter >= tempDelay):
+        if(temp == 15):
+            temp = 0
+        client.publish("/outbox/"+clientName+"/temperature", '{"update": {"labels":['+str(counter)+'],"series":[['+str(tempArray[temp])+']]}}')
+        tempDelay = counter + 1 #wait 5 seconds for next increment
+        temp = temp + 1
 
     #occupany
     if(counter >= occupDelay):
@@ -306,6 +323,18 @@ if __name__ == '__main__':
                     "units": "%",
                     "card-type": "crouton-chart-donut",
                     "title": "Occupancy"
+                },
+                "temperature": {
+                    "values": {
+                        "labels": [1],
+                        "series": [[60]],
+                        "update": ""
+                    },
+                    "max": 11,
+                    "low": 58,
+                    "high": 73,
+                    "card-type": "crouton-chart-line",
+                    "title": "Temperature (F)"
                 }
             },
             "description": "Kroobar's IOT devices"

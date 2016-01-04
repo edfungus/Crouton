@@ -4,7 +4,7 @@ import json
 import random
 
 
-clientName = "crouton-test-client-" # + str(random.randint(1, 100))
+clientName = "crouton-test-client-" # + str(random.randint(1, 100)) (Change this as same names will conflict)
 
 #device setup
 j = """
@@ -134,12 +134,15 @@ j = """
             },
             "temperature": {
                 "values": {
-                    "labels": [],
-                    "series": [[]]
+                    "labels": [1],
+                    "series": [[60]],
+                    "update": ""
                 },
-                "max": 10,
+                "max": 11,
+                "low": 58,
+                "high": 73,
                 "card-type": "crouton-chart-line",
-                "title": "Temperature"
+                "title": "Temperature (F)"
             }
         },
         "description": "Kroobar's IOT devices"
@@ -183,6 +186,8 @@ def on_message(client, userdata, msg):
         global deviceJson
         global occup
         global occupDelay
+        global temp
+        global tempDelay
 
         counter = 0
         barDoor = 34
@@ -192,6 +197,8 @@ def on_message(client, userdata, msg):
         occup = 76
         occupDelay = int(random.random()*30)
         deviceJson = json.dumps(device)
+        temp = 0
+        tempDelay = 3
         client.publish("/outbox/"+clientName+"/drinks", '{"value":0}')
         client.publish("/outbox/"+clientName+"/barDoor", '{"value":34}')
         client.publish("/outbox/"+clientName+"/danceLights", '{"value":true}')
@@ -240,6 +247,9 @@ drinks = 0
 drinksDelay = int(random.random()*5)
 occup = 76
 occupDelay = int(random.random()*30)
+temp = 0
+tempDelay = 3
+tempArray = [60,62,61,62,63,65,68,67,68,71,69,65,66,62,61]
 
 client.loop_start()
 while True:
@@ -255,11 +265,15 @@ while True:
     if(counter >= drinksDelay):
         drinks = drinks + 1 #increment value by one
         client.publish("/outbox/"+clientName+"/drinks", '{"value":'+str(drinks)+'}')
-        # client.publish("/outbox/"+clientName+"/temperature", '{"labels":[1,2],"series":[5,10]}')
-        # client.publish("/outbox/"+clientName+"/temperature", '{"update": {"labels":[12,12],"series":[[23,12]]}}')
-        client.publish("/outbox/"+clientName+"/temperature", '{"update": {"labels":[12],"series":[[23],[10]]}}')
-        # client.publish("/outbox/"+clientName+"/temperature", '{"update": {"labels":[12,13],"series":[[23,2],[10,3]]}}')
         drinksDelay = counter + int(random.random()*5) #wait 5 seconds for next increment
+
+    #temperature
+    if(counter >= tempDelay):
+        if(temp == 15):
+            temp = 0
+        client.publish("/outbox/"+clientName+"/temperature", '{"update": {"labels":['+str(counter)+'],"series":[['+str(tempArray[temp])+']]}}')
+        tempDelay = counter + 1 #wait 5 seconds for next increment
+        temp = temp + 1
 
     #occupancy
     if(counter >= occupDelay):
@@ -279,6 +293,8 @@ while True:
         drinksDelay = int(random.random()*5)
         occup = 76
         occupDelay = int(random.random()*30)
+        temp = 3
+        tempDelay = 3
 
 
 #client.loop_forever()
