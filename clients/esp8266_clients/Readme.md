@@ -11,9 +11,9 @@ python luatool.py --port /dev/cu.usbserial --src file.lua --dest file.lua
 
 demo.lua - Has boolean light on 14 and dimmable light on 12
 
-rgb-multi - Has rgb on 4,12,14 respectively on 3 separate slider dashboard card
+rgb-multi - Has rgb on 4,14,12 respectively on 3 separate slider dashboard card
 
-rgb-new - Has rgb on 4,12,14 respectively on one rgb slider dashboard card
+rgb-new - Has rgb on 4,14,12 respectively on one rgb slider dashboard card
 
 #### Extras
 
