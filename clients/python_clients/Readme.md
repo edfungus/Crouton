@@ -1,8 +1,14 @@
 
-#### Local Demo/Test Client
+#### Demo Crouton device with Python
 
 Use venv as a Python virtual environment to run a local demo/test client all.py
 
+Using <http://test.mosquitto.org> as the broker which is defualt on Crouton
+
+```bash
+source env/bin/activate
+python all.py
+```
 
 #### Cloud Foundry Client
 
