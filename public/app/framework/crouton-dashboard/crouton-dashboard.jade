@@ -76,6 +76,7 @@ dom-module(id="crouton-dashboard")
               element.setAttribute("end-point-name", address);
               element.setAttribute("end-point-json", JSON.stringify(deviceJson.endPoints[address]));
               this.container.appendChild(element);
+              console.log("sdfsd");
 
               if(this.currentPage == "dashboard"){
                 this.relayout(element);
@@ -93,6 +94,7 @@ dom-module(id="crouton-dashboard")
         },
         removeDeviceEndPoint: function(device,address,alreadyRemoved){
           this.pckry.remove(this.cardIndex[device+address]);
+          this.container.removeChild(this.cardIndex[device+address]);
           this.relayout();
 
           delete this.cardIndex[device+address];
@@ -125,7 +127,7 @@ dom-module(id="crouton-dashboard")
           }
         },
         addPackeryCards: function(){
-          if($("#dashboardHolder").css('display') != "none"){
+          if(window.getComputedStyle(document.getElementById("dashboardHolder"),null).getPropertyValue("display") != "none"){
             if(this.cardsToBeAdded[0]){
               for(var card = 0; card < this.cardsToBeAdded.length; card++){
                 this.relayout(this.cardsToBeAdded[card]);
@@ -137,9 +139,6 @@ dom-module(id="crouton-dashboard")
           } else {
             this.async(this.addPackeryCards,100);
           }
-        },
-        test: function(){
-          console.log(this.numberOfCards);
         }
       });
     }());
