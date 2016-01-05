@@ -28,7 +28,12 @@ dom-module(id="crouton-chart-line")
           this.checksInput();
 
           var options = {
-            fullWidth: true
+            fullWidth: true,
+            width: "520px",
+            height: "150px",
+            chartPadding: {
+              right: 40
+            }
           }
           if(this.endPointJson.low){
             options.low = this.endPointJson.low;

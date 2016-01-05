@@ -14,10 +14,6 @@ html(lang="en")
   body(ng-app='Crouton')
     crouton-frame#crouton-frame
 
-    //ui elements
-    each file in dashboardFiles
-      link(rel="import", href=file)
-
     //js imports
     //external
     each file in jsExternal

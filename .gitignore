@@ -1,2 +1,3 @@
 node_modules/
 public/common/bower/
+clients/esp8266_clients/lua/init-secret.lua

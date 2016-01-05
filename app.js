@@ -23,11 +23,6 @@ readdirp({ root: __dirname + '/public/app/framework/', fileFilter: '*.jade' })
   .on('data', function (entry) {
     frameworkFiles.push('/app-render/framework/' + entry.path);
   });
-//Dashboard ui element js files
-readdirp({ root: __dirname + '/public/app/dashboard-elements/', fileFilter: '*.jade' })
-  .on('data', function (entry) {
-    dashboardFiles.push('/app-render/dashboard-elements/' + entry.path);
-  });
 
 /*
 Some routing...may put this in another file later
@@ -51,7 +46,6 @@ app.get(['/','/crouton','/crouton/*'], function (req, res) {
     '/static/common/bower/chartist/dist/chartist.min.js'
   ];
   returnObj.frameworkFiles = frameworkFiles;
-  returnObj.dashboardFiles = dashboardFiles;
   res.render('index',returnObj);
 });
 //intercept templating for css files in framework

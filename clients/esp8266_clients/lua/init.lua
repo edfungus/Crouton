@@ -9,8 +9,7 @@ print('heap: ',node.heap())
 json = require "cjson"
 
 -- wifi config start
-wifi.sta.config("Portra","GEsoftware!")
--- wifi.sta.config("HOME-E349-2.4","9HACAC3C3F333N4C")
+wifi.sta.config("SSID","PASSWORD")
 -- wifi config end
 
 print('Starting up in 5 seconds!')
