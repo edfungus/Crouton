@@ -7,17 +7,17 @@ html(lang="en")
     meta(name="apple-mobile-web-app-capable", content="yes")
     meta(http-equiv="Cache-control", content="public")
 
-    //css import
-    each file in css
-      link(rel='stylesheet', href=file)
+    //polymer imports
+    link(rel="import", href="/app-render/framework/crouton-frame/crouton-frame.jade")
 
   body(ng-app='Crouton')
     crouton-frame#crouton-frame
+
+    //css import
+    each file in css
+      link(rel='stylesheet', href=file)
 
     //js imports
     //external
     each file in jsExternal
       script(src=file)
-
-    //polymer imports
-    link(rel="import", href="/app-render/framework/crouton-frame/crouton-frame.jade")

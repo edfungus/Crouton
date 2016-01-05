@@ -69,18 +69,19 @@ dom-module(id="crouton-getting-started")
         This demo uses the #[a(target="_blank", href="http://www.eclipse.org/paho/") paho-mqtt] library and is very similar to the online crouton-demo. It has most of the cards available in the demo. The two simple-text cards will update every 5 seconds (one is consistent and one has added randomness). The device name will be printed on each start and is randomized to reduce name clashing.
       p A virtualenv will be inclue in the repository which includes Python 2.7 and the necessary packages. Use the following to start the virtualenv. More about #[a(target="_blank", href="http://docs.python-guide.org/en/latest/dev/virtualenvs/") Python virtualenv]
       div.contentBox source env/bin/activate
-      div Files are on #[a(target="_blank", href="https://github.com/edfungus/Crouton-Python-Example") Github]
+      p Files are on #[a(target="_blank", href="https://github.com/edfungus/Crouton/tree/master/clients/python_clients") Github]
       div
         p
       p.header ESP8266 Device
       p.
         This demo is written in LUA and tested on an ESP8266-12. There is one togglable light (pin 14) and one dimmable light (pin 12). The device name starts with "crouton-esp1-" and is appended with the chipid so that there will be less naming conflicts. Feel free to change it to whatever you like.
       p Be sure to change the wifi config in init.lua! The Crouton configurations are in the top of main.lua
-      div Files are on #[a(target="_blank", href="https://github.com/edfungus/Crouton-ESP8266-Example") Github]
+      p Files are on #[a(target="_blank", href="https://github.com/edfungus/Crouton/tree/master/clients/esp8266_clients") Github]
 
     crouton-card(drop-shadow="false", bottom-bar="false").grid__col.grid__col--6-of-12
       p.header Setup your own devices?
       p Use the demo code to get a jump start and check out the #[a(target="_blank", href="/documentation") documentation] for more details and options! It is really simple and only requires your device to use MQTT and JSON!
+      p #[a(href="http://adventureswithedmund.com/post/136520173664/rgb-led-esp8266-with-crouton", target="_blank") RGB Led on ESP8266 guide]
 
     crouton-card(drop-shadow="false", bottom-bar="false").grid__col.grid__col--12-of-12
       p.header Hi, thanks for stopping by!
