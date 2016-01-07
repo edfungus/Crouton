@@ -21,6 +21,10 @@ dom-module(id="crouton-connect-mqtt")
           paper-input(label="Port", type="text", pattern="^[0-9]{1,4}$", value="{{port::input}}", disabled$="{{disableInput(connected)}}", auto-validate, required)
         div.grid__col.grid__col--12-of-12
           paper-input(label="Crouton Name", type="text", value="{{clientName::input}}", disabled$="{{disableInput(connected)}}", required)
+        div.grid__col.grid__col--4-of-12
+          paper-input(label="Broker Username (Optional)", type="text", value="{{username::input}}", disabled$="{{disableInput(connected)}}")
+        div.grid__col.grid__col--4-of-12
+          paper-input(label="Broker Password (Optional)", type="password", value="{{password::input}}", disabled$="{{disableInput(connected)}}")
         paper-button(type="submit", disabled$="{{validateInput(address,port,clientName,connecting)}}", on-click="toggleConnection", raised).rightBtn {{displayButtonText(connected,connecting)}}
 
   style(is="custom-style").
@@ -118,7 +122,7 @@ dom-module(id="crouton-connect-mqtt")
           this.croutonDashboard = document.getElementById("crouton-dashboard");
 
           this.connecting = true;
-          this.client = mqtt.connect({ port: this.port, host: this.address, path: "/mqtt", keepalive: 10000, clientId: this.clientName, reconnectPeriod: 0});
+          this.client = mqtt.connect({ port: this.port, host: this.address, path: "/mqtt", keepalive: 10000, clientId: this.clientName, reconnectPeriod: 0, username: this.username || "", password: this.password || ""});
           this.async(this.noConnection, 3000);
 
           //on connect
