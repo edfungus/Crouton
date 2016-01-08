@@ -39,7 +39,7 @@ Sample code for Python dummy client which includes most of the dashboard element
 
 In addition to the sample code above, we have a always running (we try!) test client under the name "crouton-demo" on the "test.mosquitto.org" public broker. The status of the device can be checked [here](http://crouton-demo-client.mybluemix.net/). And of course, check out the [getting started](/crouton/gettingStarted) for more details.
 
->Demo page detailing [Crouton test clients](/crouton/gettingStarted)
+>Demo page detailing [Crouton test clients](http://crouton.mybluemix.net/crouton/gettingStarted)
 
 ### MQTT Broker
 

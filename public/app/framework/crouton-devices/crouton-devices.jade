@@ -112,6 +112,9 @@ dom-module(id="crouton-devices")
               document.getElementById(this.deviceCardPrefix + name).disconnectDevice();
             }
           }
+        },
+        addDemo: function(){
+          this.addDevice("crouton-demo");
         }
       });
     }());
