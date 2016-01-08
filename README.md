@@ -25,7 +25,7 @@ If you are using LUA scripting, then the Nodemcu Firmware has MQTT and JSON capa
 
 >ESP8266 Lua [Nodemcu documentation on Github](https://github.com/nodemcu/nodemcu-firmware/wiki/nodemcu_api_en)
 
-Sample code for the ESP8266 which included a togglable and dimmable light. Refer to the [getting started](/crouton/gettingStarted) page for more details.
+Sample code for the ESP8266 which included a togglable and dimmable light. Refer to the [*/client/* directory](https://github.com/edfungus/Crouton/tree/master/clients) page for more details.
 
 ##### Python
 
@@ -33,7 +33,7 @@ The package we suggest to use for Python client is [paho-mqtt](http://www.eclips
 
 >Python MQTT library: [Paho-mqtt](http://www.eclipse.org/paho/)
 
-Sample code for Python dummy client which includes most of the dashboard elements. Refer to the [getting started](/crouton/gettingStarted) page for more details.
+Sample code for Python dummy client which includes most of the dashboard elements. Refer to the [*/client/* directory](https://github.com/edfungus/Crouton/tree/master/clients) page for more details.
 
 ##### Test Clients
 
