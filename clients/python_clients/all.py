@@ -143,7 +143,18 @@ j = """
                 "high": 73,
                 "card-type": "crouton-chart-line",
                 "title": "Temperature (F)"
-            }
+            },
+            "rgb": {
+				"min": 0,
+				"card-type": "crouton-rgb-slider",
+				"values": {
+					"red": 0,
+					"blue": 0,
+					"green": 0
+				},
+				"max": 255,
+				"title": "RGB LED <3"
+			}
         },
         "description": "Kroobar's IOT devices"
     }
