@@ -232,6 +232,23 @@ crouton-card {
     }
   }
 
+  paper-checkbox.paper-checkbox-0  {
+    display: block;
+
+    #checkbox.paper-checkbox {
+      border-color: @button-border;
+
+      #checkmark {
+        box-sizing: initial;
+      }
+
+      &.checked {
+        background-color: @button-normal;
+        border-color: @button-border;
+      }
+    }
+  }
+
   #input{
     font-family: 'Lato', sans-serif;
 

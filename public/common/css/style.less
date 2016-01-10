@@ -33,6 +33,7 @@
 
 //buttons
 @button-normal: rgb(78,205,196);
+@button-border: rgb(55, 152, 145);
 @button-danger: rgb(240,128,128);
 @button-grey: rgb(173,173,173);;
 
@@ -126,9 +127,14 @@ html, body {
     cursor: move;
   }
 
+  paper-button {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
   .floatMiddle {
     position: relative;
-    top: 30%;
-    transform: translateY(-30%);
+    top: 50%;
+    transform: translateY(-50%);
   }
 }

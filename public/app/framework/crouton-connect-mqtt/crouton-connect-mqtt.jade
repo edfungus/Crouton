@@ -1,6 +1,7 @@
 link(rel="import", href="/static/common/bower/polymer/polymer.html")
 link(rel="import", href="/static/common/bower/paper-input/paper-input.html")
 link(rel="import", href="/static/common/bower/paper-button/paper-button.html")
+link(rel="import", href="/static/common/bower/paper-checkbox/paper-checkbox.html")
 link(rel="import", href="/static/common/bower/paper-toast/paper-toast.html")
 link(rel="import", href="/static/common/bower/iron-form/iron-form.html")
 link(rel="import", href="/app-render/framework/crouton-card/crouton-card.jade")
@@ -8,6 +9,7 @@ link(rel="import", href="/app-render/framework/crouton-card/crouton-card.jade")
 
 dom-module(id="crouton-connect-mqtt")
   template
+    link(rel="stylesheet", href="crouton-connect-mqtt.css")
     paper-toast#mqtt-timeout(duration=5000).customToast Connection timeout to MQTT broker #[a(on-click="connectBroker").right Retry]
     crouton-card(drop-shadow="false", bottom-bar="false").grid__col.grid__col--12-of-12
       p.header
@@ -21,11 +23,17 @@ dom-module(id="crouton-connect-mqtt")
           paper-input(label="Port", type="text", pattern="^[0-9]{1,4}$", value="{{port::input}}", disabled$="{{disableInput(connected)}}", auto-validate, required)
         div.grid__col.grid__col--12-of-12
           paper-input(label="Crouton Name", type="text", value="{{clientName::input}}", disabled$="{{disableInput(connected)}}", required)
-        div.grid__col.grid__col--4-of-12
+        div.grid__col.grid__col--6-of-12
           paper-input(label="Broker Username (Optional)", type="text", value="{{username::input}}", disabled$="{{disableInput(connected)}}")
-        div.grid__col.grid__col--4-of-12
+        div.grid__col.grid__col--6-of-12
           paper-input(label="Broker Password (Optional)", type="password", value="{{password::input}}", disabled$="{{disableInput(connected)}}")
-        paper-button(type="submit", disabled$="{{validateInput(address,port,clientName,connecting)}}", on-click="toggleConnection", raised).rightBtn {{displayButtonText(connected,connecting)}}
+        div.grid__col.grid__col--2-of-12
+          paper-button(type="submit", on-click="saveMqtt", raised) Save Settings
+        div.grid__col.grid__col--7-of-12
+          paper-checkbox.topMargin Auto-connect
+          paper-checkbox Save username/password (warning: in plaintext)
+        div.grid__col.grid__col--3-of-12
+          paper-button(type="submit", disabled$="{{validateInput(address,port,clientName,connecting)}}", on-click="toggleConnection", raised).rightBtn {{displayButtonText(connected,connecting)}}
 
   style(is="custom-style").
     paper-input{
@@ -223,6 +231,26 @@ dom-module(id="crouton-connect-mqtt")
             object.connectionStatus = "not connected";
             this.fire('makeToast', { message: "Device <b>" + name + "</b> failed to connect", duration: 3000, status: "exclamation-circle" });
           }, 5000);
+        },
+        storageAvailable: function(type) {
+        	try {
+        		var storage = window[type],
+        			x = '__storage_test__';
+        		storage.setItem(x, x);
+        		storage.removeItem(x);
+        		return true;
+        	}
+        	catch(e) {
+        		return false;
+        	}
+        },
+        saveMqtt: function(){
+          if (this.storageAvailable('localStorage')) {
+            this.fire('makeToast', { message: "MQTT settings saved", duration: 2000, status: "check-circle" });
+          }
+          else {
+            this.fire('makeToast', { message: "Localstorage not detected", duration: 2000, status: "exclamation-circle" });
+          }
         }
       });
     }());
