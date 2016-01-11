@@ -43,7 +43,22 @@ crouton-device-card {
   }
 
   .deviceButtons {
-    display: inline-flex;
+    display: inline-block;
     float: right;
+
+    .buttons {
+      display: flex;
+    }
+
+    .checkbox {
+      margin-top: 5px;
+      padding-left: 5px;
+      text-align: right;
+
+      paper-checkbox {
+        display: inline;
+        margin-left: 10px;
+      }
+    }
   }
 }

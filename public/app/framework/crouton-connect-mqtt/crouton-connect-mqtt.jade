@@ -27,11 +27,13 @@ dom-module(id="crouton-connect-mqtt")
           paper-input(label="Broker Username (Optional)", type="text", value="{{username::input}}", disabled$="{{disableInput(connected)}}")
         div.grid__col.grid__col--6-of-12
           paper-input(label="Broker Password (Optional)", type="password", value="{{password::input}}", disabled$="{{disableInput(connected)}}")
-        div.grid__col.grid__col--2-of-12
-          paper-button(type="submit", on-click="saveMqtt", raised) Save Settings
-        div.grid__col.grid__col--7-of-12
-          paper-checkbox.topMargin Auto-connect
-          paper-checkbox Save username/password (warning: in plaintext)
+        div.grid__col.grid__col--9-of-12
+          span.mqttSettingButtons
+            paper-button(type="submit", on-click="saveMqtt", raised).leftBtn Save Settings
+            paper-button(type="submit", on-click="clearMqttSettings", raised).clear Clear Settings
+          span.mqttSettingCheckboxes
+            paper-checkbox(checked="{{autoConnect}}").topMargin Auto-connect
+            paper-checkbox(checked="{{saveUsernamePassword}}") Save username/password (warning: in plaintext)
         div.grid__col.grid__col--3-of-12
           paper-button(type="submit", disabled$="{{validateInput(address,port,clientName,connecting)}}", on-click="toggleConnection", raised).rightBtn {{displayButtonText(connected,connecting)}}
 
@@ -48,12 +50,6 @@ dom-module(id="crouton-connect-mqtt")
     (function() {
       Polymer({
         is: "crouton-connect-mqtt",
-        ready: function() {
-          this.checkStatusAsync = {};
-          this.checkAutoConnect = {};
-          this.deviceCardPrefix = "crouton-device-";
-
-        },
         properties: {
           address: {
             type: String,
@@ -79,6 +75,29 @@ dom-module(id="crouton-connect-mqtt")
         },
         listeners: {
 
+        },
+        ready: function() {
+          this.checkStatusAsync = {};
+          this.checkAutoConnect = {};
+          this.deviceCardPrefix = "crouton-device-";
+        },
+        attached: function() {
+          //prepopulate mqtt settings
+          var mqttSettings = localStorage.getItem("crouton-mqttSettings");
+          if(mqttSettings){
+            var settings = JSON.parse(mqttSettings);
+            this.address = settings.address;
+            this.port = settings.port;
+            this.clientName = settings.clientName;
+            this.autoConnect = settings.autoConnect;
+            this.saveUsernamePassword = settings.saveUsernamePassword;
+            this.username = settings.username;
+            this.password = settings.password;
+
+            if(this.autoConnect){
+              this.connectBroker();
+            }
+          }
         },
         displayConnected: function(connected,connecting){
           if(connecting){
@@ -246,7 +265,36 @@ dom-module(id="crouton-connect-mqtt")
         },
         saveMqtt: function(){
           if (this.storageAvailable('localStorage')) {
+            var mqttSettings = {};
+            mqttSettings.address = this.address;
+            mqttSettings.port = this.port;
+            mqttSettings.clientName = this.clientName;
+            mqttSettings.autoConnect = this.autoConnect;
+            mqttSettings.saveUsernamePassword = this.saveUsernamePassword;
+
+            if(this.saveUsernamePassword){
+              mqttSettings.username = this.username;
+              mqttSettings.password = this.password;
+            }
+
+            localStorage.setItem("crouton-mqttSettings", JSON.stringify(mqttSettings));
             this.fire('makeToast', { message: "MQTT settings saved", duration: 2000, status: "check-circle" });
+          }
+          else {
+            this.fire('makeToast', { message: "Localstorage not detected", duration: 2000, status: "exclamation-circle" });
+          }
+        },
+        clearMqttSettings: function(){
+          if (this.storageAvailable('localStorage')) {
+            localStorage.removeItem("crouton-mqttSettings");
+            this.address = "";
+            this.port = "";
+            this.clientName = "";
+            this.autoConnect = false;
+            this.saveUsernamePassword = false;
+            this.username = "";
+            this.password = "";
+            this.fire('makeToast', { message: "MQTT settings removed", duration: 2000, status: "check-circle" });
           }
           else {
             this.fire('makeToast', { message: "Localstorage not detected", duration: 2000, status: "exclamation-circle" });

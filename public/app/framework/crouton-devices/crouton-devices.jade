@@ -23,7 +23,7 @@ dom-module(id="crouton-devices")
       div
         paper-input(label="Enter new device name", type="text", value="{{newDeviceName::input}}", on-keypress="keyCheck", required)
         div.addButtons
-          paper-button(type="submit", disabled$="{{validateNewDeviceInput(newDeviceName)}}", on-click="addDevice", raised) Add Device
+          paper-button(type="submit", disabled$="{{validateNewDeviceInput(newDeviceName)}}", on-click="addDevice", raised).rightBtn Add Device
 
 
   style(is="custom-style").
@@ -41,25 +41,30 @@ dom-module(id="crouton-devices")
           this.newDeviceName = '';
           this.deviceCardPrefix = "crouton-device-";
 
-          // this.push('devices','test');
-          // this.push('devices','test2');
-          // this.push('devices','tali');
-
+          this.mqttCard = document.getElementById("crouton-mqtt");
           this.mqttConnected = false;
 
           document.getElementById("crouton-frame").addEventListener("mqttConnection", function(event){
             that.mqttConnected = document.getElementById("crouton-mqtt").connected;
           });
 
-
-          //this.addDevice('test');
-          //this.addDevice('test2');
         },
         properties: {
 
         },
         listeners: {
 
+        },
+        attached: function(){
+          if (this.mqttCard.storageAvailable('localStorage')) {
+            var deviceList = localStorage.getItem("crouton-devicelist");
+            if(deviceList){
+              var deviceListJson = JSON.parse(deviceList);
+              for(var i = 0; i < deviceListJson.devices.length; i++){
+                this.addDevice(deviceListJson.devices[i]);
+              }
+            }
+          }
         },
         validateNewDeviceInput: function(newDeviceName){
           //making sure there is a name not just white spaces... also need to filter special characteres later too
@@ -91,7 +96,7 @@ dom-module(id="crouton-devices")
             this.push('devices', name);
             this.newDeviceName = '';
             this.async(function(){
-              this.connectDevice(name);
+            this.connectDevice(name);
             }, 100);
           } else {
             this.fire('makeToast', { message: "Uh on! <b>" + name + "</b> already exists as a device", duration: 2000 });
@@ -103,7 +108,7 @@ dom-module(id="crouton-devices")
               this.splice('devices', index, 1);
           }
         },
-        connectDevice: function(name){
+        connectDevice: function(name,autoAdd){
           document.getElementById(this.deviceCardPrefix + name).connectDevice();
         },
         disconnectAllDevices: function(){

@@ -8,20 +8,27 @@ dom-module(id="crouton-device-card")
     div.deviceTitle
       span.deviceName {{deviceName}}
       span.deviceStatus {{connectionStatus}}
-    div.deviceContent
-      div.deviceDetails
-        template(is="dom-if", if="{{deviceJson.description}}")
-          div
-            span.detailTitle Description:
-            span {{deviceJson.description}}
-        template(is="dom-if", if="{{deviceJson.status}}")
-          div
-            span.detailTitle Status:
-            span {{deviceJson.status}}
-      div.deviceButtons
-        paper-button(disabled$="{{buttonCheck(connectionStatus)}}", on-click="toggleConnection", class$="{{connectionButtonBg(connectionStatus)}}", raised) {{displayButtonText(connectionStatus)}}
-        template(is="dom-if", if="{{!buttonCheck(connectionStatus)}}")
-          paper-button(disabled$="{{buttonCheck(connectionStatus)}}", on-click="removeDevice", raised).dark Remove
+    div.deviceContent.grid.contentMarginFix
+      div.grid__col.grid__col--9-of-12
+        div.deviceDetails
+          template(is="dom-if", if="{{deviceJson.description}}")
+            div
+              span.detailTitle Description:
+              span {{deviceJson.description}}
+          template(is="dom-if", if="{{deviceJson.status}}")
+            div
+              span.detailTitle Status:
+              span {{deviceJson.status}}
+
+      div.grid__col.grid__col--3-of-12
+        div.deviceButtons
+          div.buttons
+            paper-button(disabled$="{{buttonCheck(connectionStatus)}}", on-click="toggleConnection", class$="{{connectionButtonBg(connectionStatus)}}", raised) {{displayButtonText(connectionStatus)}}
+            template(is="dom-if", if="{{!buttonCheck(connectionStatus)}}")
+              paper-button(disabled$="{{buttonCheck(connectionStatus)}}", on-click="removeDevice", raised).clear.rightBtn Remove
+          div.checkbox
+            p Auto-connect
+              paper-checkbox(on-change="autoConnect" checked="{{saveCheckbox}}").floatRight.topMargin
 
 
   script.
@@ -92,6 +99,8 @@ dom-module(id="crouton-device-card")
         connectDevice: function(){
           this.connectionStatus = "connecting";
           this.mqttCard.connectDevice(this.deviceName,this);
+          var index = this.savedDeviceIndex(this.deviceName);
+          this.saveCheckbox = index || index === 0 ? true : false;
         },
         disconnectDevice: function(){
           this.connectionStatus = "not connected";
@@ -130,5 +139,49 @@ dom-module(id="crouton-device-card")
             this.connectDevice();
           }
         },
+        autoConnect: function(){
+          if (this.mqttCard.storageAvailable('localStorage')) {
+            var deviceList = localStorage.getItem("crouton-devicelist");
+            var deviceListJson;
+            if(deviceList){
+              deviceListJson = JSON.parse(deviceList);
+            } else {
+              deviceListJson = {};
+              deviceListJson.devices = [];
+            }
+
+            if(this.saveCheckbox){
+              deviceListJson.devices.push(this.deviceName);
+              localStorage.setItem("crouton-devicelist", JSON.stringify(deviceListJson));
+              this.fire('makeToast', { message: this.deviceName + " saved", duration: 2000, status: "check-circle" });
+            } else {
+              var index = this.savedDeviceIndex(this.deviceName);
+              if(index || index === 0){
+                deviceListJson.devices.splice(index, 1);
+              }
+              localStorage.setItem("crouton-devicelist", JSON.stringify(deviceListJson));
+              this.fire('makeToast', { message: this.deviceName + " removed", duration: 2000, status: "check-circle" });
+            }
+
+          }
+          else {
+            this.fire('makeToast', { message: "Localstorage not detected", duration: 2000, status: "exclamation-circle" });
+          }
+        },
+        savedDeviceIndex: function(name){
+          if (this.mqttCard.storageAvailable('localStorage')) {
+            var deviceList = localStorage.getItem("crouton-devicelist");
+            if(deviceList){
+              var deviceListJson = JSON.parse(deviceList);
+              var index = deviceListJson.devices.indexOf(name);
+              if (index > -1) {
+                return index
+              } else {
+                return false
+              }
+            }
+          }
+          return false
+        }
       });
     }());
