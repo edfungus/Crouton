@@ -92,7 +92,7 @@ dom-module(id="crouton-device-card")
           } else {
             this.connectionStatus = "not connected";
           }
-          this.fire('makeToast', { message: "Device <b>" + this.deviceName + "</b> has been removed", duration: 3000, status: "exclamation-circle" });
+          this.fire('makeToast', { message: "<b>" + this.deviceName + "</b> has been removed", duration: 3000, status: "exclamation-circle" });
           this.mqttCard.unsubscribeAddress("/outbox/" + this.deviceName + "/deviceInfo");
           this.unsubscribeDevice(this.alreadyRemoved);
         },
@@ -104,12 +104,12 @@ dom-module(id="crouton-device-card")
         },
         disconnectDevice: function(){
           this.connectionStatus = "not connected";
-          this.fire('makeToast', { message: "Device <b>" + this.deviceName + "</b> has been disconnected", duration: 3000, status: "exclamation-circle" });
+          this.fire('makeToast', { message: "<b>" + this.deviceName + "</b> has been disconnected", duration: 3000, status: "exclamation-circle" });
           this.unsubscribeDevice();
         },
         forcedDisconnect: function(message){
           this.connectionStatus = "not connected";
-          this.fire('makeToast', { message: "Device <b>" + this.deviceName + "</b> has been disconnected", duration: 3000, status: "exclamation-circle" });
+          this.fire('makeToast', { message: "<b>" + this.deviceName + "</b> has been disconnected", duration: 3000, status: "exclamation-circle" });
           this.mqttCard.subscribeAddress("/outbox/" + this.deviceName + "/deviceInfo");
           this.mqttCard.checkAutoConnect[this.deviceName] = true;
           this.unsubscribeDevice();
@@ -153,14 +153,14 @@ dom-module(id="crouton-device-card")
             if(this.saveCheckbox){
               deviceListJson.devices.push(this.deviceName);
               localStorage.setItem("crouton-devicelist", JSON.stringify(deviceListJson));
-              this.fire('makeToast', { message: this.deviceName + " saved", duration: 2000, status: "check-circle" });
+              this.fire('makeToast', { message: "<b>" + this.deviceName + "</b> saved for auto-connect", duration: 2000, status: "check-circle" });
             } else {
               var index = this.savedDeviceIndex(this.deviceName);
               if(index || index === 0){
                 deviceListJson.devices.splice(index, 1);
               }
               localStorage.setItem("crouton-devicelist", JSON.stringify(deviceListJson));
-              this.fire('makeToast', { message: this.deviceName + " removed", duration: 2000, status: "check-circle" });
+              this.fire('makeToast', { message: "<b>" + this.deviceName + "</b> removed from auto-connect", duration: 2000, status: "check-circle" });
             }
 
           }
