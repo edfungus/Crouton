@@ -2,8 +2,8 @@ var express = require('express');
 var readdirp = require('readdirp');
 
 var app = express();
-app.set('views', __dirname + '/public/app')
-app.set('view engine', 'jade')
+app.set('views', __dirname + '/public/app');
+app.set('view engine', 'jade');
 
 /*
 Set bower and app directories for static retrieval.
