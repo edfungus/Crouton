@@ -62,9 +62,9 @@ dom-module(id="crouton-chart-donut")
             }
           });
           //Reupdate chart so that it will fit correctly
-          // this.async(function(){
-          //   that.chart.update();
-          // },100);
+          this.async(function(){
+            that.chart.update();
+          },200);
         },
         newValues: function(changeRecord){
           if(this.endPointJson.centerSum && Array.isArray(this.endPointJson.values.series)){

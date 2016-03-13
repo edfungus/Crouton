@@ -387,7 +387,9 @@ Example:
 
 ![Crouton-chart-line](https://raw.githubusercontent.com/edfungus/Crouton/master/public/common/images/crouton-chart-line.png)
 
-</br> A simple line chart with multiple lines available. The *labels* corresponds to the x axis values and the *series* corresponds to the y axis values. Multiple sets of (x,y) values can be passed at once as long as the array length of labels and series are matched. The reason why series is multidimensional is so that multiple lines can be drawn where each array in series corresponds to a line. *It is suggested that labels and series be prepopulated with one set of (x,y) value for each line* The *update* parameter is expected on update and holds a copy of *values* with the new *labels* and *series* within. *Max* refers to the maximum number of data points based on the x axis is shown. *low* and *high* refers to the maximum y values expected.
+</br> A simple line chart with multiple lines available. The *labels* corresponds to the x axis values and the *series* corresponds to the y axis values. Multiple sets of (x,y) values can be passed at once as long as the array length of labels and series are matched. The reason why series is multidimensional is so that multiple lines can be drawn where each array in series corresponds to a line. The *update* parameter is expected on update and holds a copy of *values* with the new *labels* and *series* within. *Max* refers to the maximum number of data points based on the x axis is shown. *low* and *high* refers to the maximum y values expected.
+
+*It is suggested that labels and series be prepopulated with one set of (x,y) value for each line*
 
 ```json
 Device -> Crouton
