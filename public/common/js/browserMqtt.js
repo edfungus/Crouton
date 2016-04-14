@@ -1237,6 +1237,10 @@ function connect (brokerUrl, opts) {
     opts.protocol = protocolList.filter(function (key) {
       return 'function' === typeof protocols[key];
     })[0];
+  } else {
+    opts.protocol = protocolList.filter(function (key) {
+      return 'function' === typeof protocols[key];
+    })[1];
   }
 
   if (false === opts.clean && !opts.clientId) {
