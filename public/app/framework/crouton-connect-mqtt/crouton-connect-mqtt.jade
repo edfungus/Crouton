@@ -20,7 +20,7 @@ dom-module(id="crouton-connect-mqtt")
         div.grid__col.grid__col--9-of-12
           paper-input(label="Broker Address", type="text", value="{{address::input}}", disabled$="{{disableInput(connected)}}", required)
         div.grid__col.grid__col--3-of-12
-          paper-input(label="Port", type="text", pattern="^[0-9]{1,4}$", value="{{port::input}}", disabled$="{{disableInput(connected)}}", auto-validate, required)
+          paper-input(label="Port", type="text", pattern="^[0-9]{1,6}$", value="{{port::input}}", disabled$="{{disableInput(connected)}}", auto-validate, required)
         div.grid__col.grid__col--12-of-12
           paper-input(label="Crouton Name", type="text", value="{{clientName::input}}", disabled$="{{disableInput(connected)}}", required)
         div.grid__col.grid__col--6-of-12
@@ -34,6 +34,7 @@ dom-module(id="crouton-connect-mqtt")
           span.mqttSettingCheckboxes
             paper-checkbox(checked="{{autoConnect}}").topMargin Auto-connect
             paper-checkbox(checked="{{saveUsernamePassword}}") Save username/password (warning: in plaintext)
+            paper-checkbox(checked="{{wssProtocol}}") Secure Websockets (TLS)
         div.grid__col.grid__col--3-of-12
           paper-button(type="submit", disabled$="{{validateInput(address,port,clientName,connecting)}}", on-click="toggleConnection", raised).rightBtn {{displayButtonText(connected,connecting)}}
 
@@ -71,7 +72,11 @@ dom-module(id="crouton-connect-mqtt")
           connecting: {
             type: Boolean,
             value: false
-          }
+          },
+          protocol: {
+            type: String,
+            value: ""
+           }
         },
         listeners: {
 
@@ -93,6 +98,7 @@ dom-module(id="crouton-connect-mqtt")
             this.saveUsernamePassword = settings.saveUsernamePassword;
             this.username = settings.username;
             this.password = settings.password;
+            this.wssProtocol = settings.wssProtocol;
 
             if(this.autoConnect){
               this.connectBroker();
@@ -147,9 +153,12 @@ dom-module(id="crouton-connect-mqtt")
         connectBroker: function(){
           var that = this;
           this.croutonDashboard = document.getElementById("crouton-dashboard");
+          if(this.wssProtocol == true){
+            this.protocol = "ws";
+          }
 
           this.connecting = true;
-          this.client = mqtt.connect({ port: this.port, host: this.address, path: "/mqtt", keepalive: 10000, clientId: this.clientName, reconnectPeriod: 0, username: this.username || "", password: this.password || ""});
+          this.client = mqtt.connect({ protocol: this.protocol, port: this.port, host: this.address, path: "/mqtt", keepalive: 10000, clientId: this.clientName, reconnectPeriod: 0, username: this.username || "", password: this.password || ""});
           this.async(this.noConnection, 3000);
 
           //on connect
@@ -271,6 +280,7 @@ dom-module(id="crouton-connect-mqtt")
             mqttSettings.clientName = this.clientName;
             mqttSettings.autoConnect = this.autoConnect;
             mqttSettings.saveUsernamePassword = this.saveUsernamePassword;
+            mqttSettings.wssProtocol = this.wssProtocol;
 
             if(this.saveUsernamePassword){
               mqttSettings.username = this.username;
