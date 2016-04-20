@@ -3,10 +3,9 @@
   "description": "MQTT IOT Dashboard",
   "main": "app.js",
   "authors": [
-    "Edmund Fung"
+    "Edmund Fung <edfungus@gmail.com>"
   ],
   "license": "MIT",
-  "homepage": "https://github.com/wickwire/Crouton",
   "ignore": [
     "**/.*",
     "node_modules",
