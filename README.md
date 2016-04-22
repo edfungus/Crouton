@@ -462,3 +462,21 @@ Example:
   "title": "RGB Lights" [optional]
 }
 ```
+
+### Youtube Stream
+
+![crouton-video-youtube](https://raw.githubusercontent.com/edfungus/Crouton/master/public/common/images/crouton-video-youtube.png) </br> (Thank you [wickwire](https://github.com/wickwire) for this addition) </br> Add a Youtube video or livestream to your dashboard. This is great for having a dashboard of various security cameras.
+
+```json
+Device - Crouton
+Name: crouton-video-youtube
+
+Example:
+"youTubeStream": {
+  "values": {
+      "youtubeID": "GZnb3jQ2YZo" [required]
+  },
+  "card-type": "crouton-video-youtube", [required]
+  "title": "YouTube Stream" [optional]
+}
+```

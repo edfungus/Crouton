@@ -156,7 +156,6 @@ j = """
 				"title": "RGB LED <3"
 			},
             "youTubeStream": {
-                "units": "people entered",
                 "values": {
                     "youtubeID": "GZnb3jQ2YZo"
                 },
