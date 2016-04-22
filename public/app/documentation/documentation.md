@@ -389,7 +389,7 @@ Example:
 
 </br> A simple line chart with multiple lines available. The *labels* corresponds to the x axis values and the *series* corresponds to the y axis values. Multiple sets of (x,y) values can be passed at once as long as the array length of labels and series are matched. The reason why series is multidimensional is so that multiple lines can be drawn where each array in series corresponds to a line. The *update* parameter is expected on update and holds a copy of *values* with the new *labels* and *series* within. *Max* refers to the maximum number of data points based on the x axis is shown. *low* and *high* refers to the maximum y values expected.
 
-*It is suggested that labels and series be prepopulated with one set of (x,y) value for each line* 
+*It is suggested that labels and series be prepopulated with one set of (x,y) value for each line*
 
 ```json
 Device -> Crouton
@@ -458,5 +458,23 @@ Example:
   "max": 255, [required]
   "card-type": "crouton-rgb-slider", [required]
   "title": "RGB Lights" [optional]
+}
+```
+
+### Youtube Stream
+
+![crouton-video-youtube](/static/common/images/crouton-video-youtube.png) </br> (Thank you [wickwire](https://github.com/wickwire) for this addition) </br> Add a Youtube video or livestream to your dashboard. This is great for having a dashboard of various security cameras.
+
+```json
+Device - Crouton
+Name: crouton-video-youtube
+
+Example:
+"youTubeStream": {
+  "values": {
+      "youtubeID": "GZnb3jQ2YZo" [required]
+  },
+  "card-type": "crouton-video-youtube", [required]
+  "title": "YouTube Stream" [optional]
 }
 ```
