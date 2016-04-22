@@ -20,7 +20,7 @@
     "desandro-matches-selector": "~2.0.0",
     "draggabilly": "*",
     "fizzy-ui-utils": "~2.0.0",
-    "fontawesome-iconset": "diego-d5000/fontawesome-iconset",
+    "fontawesome-iconset": "edfungus/fontawesome-iconset",
     "font-roboto": "PolymerElements/font-roboto#^1.0.1",
     "font-awesome": "*",
     "iron-a11y-announcer": "PolymerElements/iron-a11y-announcer#^1.0.0",
@@ -55,6 +55,7 @@
     "paper-progress": "PolymerElements/paper-progress#^1.0.0",
     "paper-slider": "PolymerElements/paper-slider",
     "paper-toast": "PolymerElements/paper-toast",
-    "paper-toggle-button": "PolymerElements/paper-toggle-button"
+    "paper-toggle-button": "PolymerElements/paper-toggle-button",
+    "polymer": "Polymer/polymer#~1.4.0"
   }
 }
