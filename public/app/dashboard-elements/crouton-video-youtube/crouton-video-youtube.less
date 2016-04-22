@@ -1,0 +1,37 @@
+@import "./public/common/css/style.less";
+
+crouton-video-youtube{
+  width: @db-min-size;
+  min-width: @db-min-size;
+  height: @db-min-size;
+  min-height: @db-min-size;
+  display: table-row-group;
+
+  crouton-card {
+    text-align: center;
+    color: @fc-regular;
+
+    .expand {
+      margin: @dashboard-card-padding;
+      padding-top: @db-card-top-spacing;
+    }
+  }
+
+  .textDisplay {
+    font-size: @db-main-font-size;
+    margin-bottom: @db-space-under-main-text;
+  }
+
+  .unitDisplay {
+    font-size: @db-sub-font-size;
+    color: @fc-gray;
+  }
+
+  .titleDisplay {
+    font-size: @db-title-font-size;
+    bottom: @db-title-bottom;
+    left: 0px;
+    width: 100%;
+    position: absolute;
+  }
+}
