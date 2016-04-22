@@ -158,10 +158,10 @@ j = """
             "youTubeStream": {
                 "units": "people entered",
                 "values": {
-                    "value": 34
+                    "youtubeID": "GZnb3jQ2YZo"
                 },
                 "card-type": "crouton-video-youtube",
-                "title": "YouTubeStream"
+                "title": "YouTube Stream"
             }
         },
         "description": "Kroobar's IOT devices"
