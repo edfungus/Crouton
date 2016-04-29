@@ -3,11 +3,11 @@ var readdirp = require('readdirp');
 
 var app = express();
 app.set('views', __dirname + '/public/app');
-app.set('view engine', 'jade');
+app.set('view engine', 'pug');
 
 /*
 Set bower and app directories for static retrieval.
-JS files from app will use this path, not jade files becaue those need to be rendered
+JS files from app will use this path, not pug files becaue those need to be rendered
 */
 app.use('/static/common', express.static(__dirname + '/public/common'));
 app.use('/static/framework', express.static(__dirname + '/public/app/framework'));
@@ -19,7 +19,7 @@ var frameworkFiles = [];
 var dashboardFiles = [];
 
 //Framework js files
-readdirp({ root: __dirname + '/public/app/framework/', fileFilter: '*.jade' })
+readdirp({ root: __dirname + '/public/app/framework/', fileFilter: '*.pug' })
   .on('data', function (entry) {
     frameworkFiles.push('/app-render/framework/' + entry.path);
   });
@@ -55,12 +55,12 @@ app.get('/app-render/framework/**/*.css', function (req, res) {
 app.get('/app-render/dashboard-elements/**/*.css', function (req, res) {
   res.sendFile(__dirname + "/public/app/dashboard-elements/"+req.params[0]+"/"+req.params[2]+".css");
 });
-//templating angular html (jade) files
-app.get('/app-render/framework/**/*.jade', function (req, res) {
-  res.render("framework/"+req.params[0]+"/"+req.params[2]+".jade");
+//templating angular html (pug) files
+app.get('/app-render/framework/**/*.pug', function (req, res) {
+  res.render("framework/"+req.params[0]+"/"+req.params[2]+".pug");
 });
-app.get('/app-render/dashboard-elements/**/*.jade', function (req, res) {
-  res.render("dashboard-elements/"+req.params[0]+"/"+req.params[2]+".jade");
+app.get('/app-render/dashboard-elements/**/*.pug', function (req, res) {
+  res.render("dashboard-elements/"+req.params[0]+"/"+req.params[2]+".pug");
 });
 //For documentation
 app.get('/app-render/documentation/*.css', function (req, res) {
@@ -73,7 +73,7 @@ app.get('/app-render/documentation/*.md', function (req, res) {
   res.sendFile(__dirname + "/public/app/documentation/"+req.params[0]+".md");
 });
 app.get(['/documentation'], function (req, res) {
-  res.render('documentation/documentation.jade');
+  res.render('documentation/documentation.pug');
 });
 //404
 app.use(function(req, res, next) {
