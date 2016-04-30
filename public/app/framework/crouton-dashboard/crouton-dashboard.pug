@@ -1,5 +1,5 @@
 link(rel="import", href="/static/common/bower/polymer/polymer.html")
-link(rel="import", href="/app-render/framework/crouton-card/crouton-card.jade")
+link(rel="import", href="/app-render/framework/crouton-card/crouton-card.pug")
 
 dom-module(id="crouton-dashboard")
   template
@@ -77,7 +77,7 @@ dom-module(id="crouton-dashboard")
                   var path = "app-render/dashboard-elements/";
                   var elementImport = document.createElement("link");
                   elementImport.rel = "import";
-                  elementImport.href = path + elementName + "/" + elementName + ".jade";
+                  elementImport.href = path + elementName + "/" + elementName + ".pug";
                   elementImport.setAttribute("onload","handleLoad(event)");
 
                   document.head.appendChild(elementImport);
