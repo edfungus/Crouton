@@ -1,0 +1,68 @@
+<!doctype html>
+<html>
+<head>
+  <title>fonawesome-iconset</title>
+  <!-- polyfill WebComponents, if needed -->
+  <script src="../webcomponentsjs/webcomponents-lite.min.js"></script>
+  <!-- load layout classes -->
+  <link rel="import" href="../iron-flex-layout/classes/iron-flex-layout.html">
+  <link rel="import" href="fa-brand.html"/>
+  <link rel="import" href="fa-chart.html"/>
+  <link rel="import" href="fa-currency.html"/>
+  <link rel="import" href="fa-directional.html"/>
+  <link rel="import" href="fa-file-type.html"/>
+  <link rel="import" href="fa-form-control.html"/>
+  <link rel="import" href="fa-gender.html"/>
+  <link rel="import" href="fa-medical.html"/>
+  <link rel="import" href="fa-payment.html"/>
+  <link rel="import" href="fa-spinner.html"/>
+  <link rel="import" href="fa-text-editor.html"/>
+  <link rel="import" href="fa-transportation.html"/>
+  <link rel="import" href="fa-video-player.html"/>
+  <link rel="import" href="fa-web-application.html"/>
+  <link rel="import" href="fa-all.html"/>
+  <style>
+    body {
+      font-family: sans-serif;
+    }
+    iron-icon {
+      -webkit-transition: all .2s;
+         -moz-transition: all .2s;
+          -ms-transition: all .2s;
+           -o-transition: all .2s;
+              transition: all .2s;
+    }
+    iron-icon:hover {
+      fill: #1c9a71;
+    }
+    .set {
+      padding: 1em 0;
+    }
+    .container {
+      min-width: 10em;
+      padding: 1em 0.5em;
+    }
+    .container > div {
+      margin-top: 0.5em;
+      color: black;
+      font-size: 0.8em;
+    }
+  </style>
+  </head>
+<body>
+  <template is="dom-bind">
+    <iron-meta type="iconset" list="{{iconsets}}"></iron-meta>
+    <template is="dom-repeat" items="{{iconsets}}">
+	  <h2>{{item.name}}</h2>
+      <div class="set horizontal wrap layout">
+        <template is="dom-repeat" items="{{item.iconNames}}">
+          <span class="container vertical center layout">
+            <iron-icon icon="{{item}}"></iron-icon>
+            <div>{{item}}</div>
+          </span>
+        </template>
+      </div>
+    </template>
+  </template>
+</body>
+</html>

@@ -1,0 +1,34 @@
+
+<link rel="import" href="../static/common/bower/polymer/polymer.html"/>
+<link rel="import" href="crouton-card.html"/>
+<dom-module id="crouton-simple-text">
+  <template>
+    <link rel="stylesheet" href="../css/crouton-simple-text.css"/>
+    <crouton-card>
+      <div class="dragger"></div>
+      <div class="expand">
+        <div class="textDisplay">{{endPointJson.values.value}}</div>
+        <div class="unitDisplay">{{endPointJson.units}}</div>
+        <div class="titleDisplay">{{endPointJson.title}}</div>
+      </div>
+    </crouton-card>
+  </template>
+  <script>
+    (function() {
+      Polymer({
+        is: "crouton-simple-text",
+        properties: {
+          endPointJson: {
+            type: Object,
+            notify: true
+          }
+        },
+        observers: [
+          'newValues(endPointJson.values.*)'
+        ],
+        newValues: function(changeRecord){
+        }
+      });
+    }());
+  </script>
+</dom-module>

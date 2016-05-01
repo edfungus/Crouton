@@ -1,15 +1,15 @@
-link(rel="import", href="/static/common/bower/polymer/polymer.html")
-link(rel="import", href="/static/common/bower/paper-input/paper-input.html")
-link(rel="import", href="/static/common/bower/paper-button/paper-button.html")
-link(rel="import", href="/static/common/bower/paper-checkbox/paper-checkbox.html")
-link(rel="import", href="/static/common/bower/paper-toast/paper-toast.html")
-link(rel="import", href="/static/common/bower/iron-form/iron-form.html")
-link(rel="import", href="/app-render/framework/crouton-card/crouton-card.pug")
+link(rel="import", href="../static/common/bower/polymer/polymer.html")
+link(rel="import", href="../static/common/bower/paper-input/paper-input.html")
+link(rel="import", href="../static/common/bower/paper-button/paper-button.html")
+link(rel="import", href="../static/common/bower/paper-checkbox/paper-checkbox.html")
+link(rel="import", href="../static/common/bower/paper-toast/paper-toast.html")
+link(rel="import", href="../static/common/bower/iron-form/iron-form.html")
+link(rel="import", href="crouton-card.html")
 
 
 dom-module(id="crouton-connect-mqtt")
   template
-    link(rel="stylesheet", href="crouton-connect-mqtt.css")
+    link(rel="stylesheet", href="../css/crouton-connect-mqtt.css")
     paper-toast#mqtt-timeout(duration=5000).customToast Connection timeout to MQTT broker #[a(on-click="connectBroker").right Retry]
     crouton-card(drop-shadow="false", bottom-bar="false").grid__col.grid__col--12-of-12
       p.header

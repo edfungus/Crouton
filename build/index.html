@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Crouton</title>
+    <base href="/">
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta http-equiv="Cache-control" content="public">
+    <!--polymer imports-->
+    <link rel="import" href="/html/crouton-frame.html">
+  </head>
+  <body ng-app="Crouton">
+    <crouton-frame id="crouton-frame"></crouton-frame>
+    <!--css import-->
+    <link rel="stylesheet" href="../css/font-awesome.min.css">
+    <link rel="stylesheet" href="../css/chartist.min.css">
+    <link rel="stylesheet" href="../css/toast.css">
+    <link rel="stylesheet" href="../css/tmpl.css">
+    <!--js imports-->
+    <!--external-->
+    <script src="../js/browserMqtt.js"></script>
+    <script src="../js/webcomponents-lite.js"></script>
+    <script src="../js/packery.pkgd.min.js"></script>
+    <script src="../js/draggabilly.pkgd.min.js"></script>
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/chartist.min.js"></script>
+    <script>
+      function handleLoad(e) {
+        var card = e.target.href.split("/");
+        card = card[card.length-1];
+        card = card.split(".")[0];
+        if (document.createEvent) {
+          event = document.createEvent("HTMLEvents");
+          event.card = card;
+          event.initEvent("crouton-import-loaded", true, true);
+          window.dispatchEvent(event);
+        } else {
+          event = document.createEventObject();
+          event.card = card;
+          event.eventType = "crouton-import-loaded";
+          window.fireEvent(event.eventType, event);
+        }
+      }
+    </script>
+    <script src="http://localhost:35729/livereload.js"></script>
+  </body>
+</html>
