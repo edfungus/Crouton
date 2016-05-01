@@ -335,6 +335,13 @@ if __name__ == '__main__':
                     "high": 73,
                     "card-type": "crouton-chart-line",
                     "title": "Temperature (F)"
+                },
+                "youTubeStream": {
+                    "values": {
+                        "youtubeID": "GZnb3jQ2YZo"
+                    },
+                    "card-type": "crouton-video-youtube",
+                    "title": "YouTube Stream"
                 }
             },
             "description": "Kroobar's IOT devices"

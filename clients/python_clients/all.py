@@ -154,7 +154,14 @@ j = """
 				},
 				"max": 255,
 				"title": "RGB LED <3"
-			}
+			},
+            "youTubeStream": {
+                "values": {
+                    "youtubeID": "GZnb3jQ2YZo"
+                },
+                "card-type": "crouton-video-youtube",
+                "title": "YouTube Stream"
+            }
         },
         "description": "Kroobar's IOT devices"
     }
