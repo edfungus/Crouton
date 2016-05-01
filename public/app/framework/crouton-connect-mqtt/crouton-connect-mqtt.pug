@@ -4,7 +4,7 @@ link(rel="import", href="/static/common/bower/paper-button/paper-button.html")
 link(rel="import", href="/static/common/bower/paper-checkbox/paper-checkbox.html")
 link(rel="import", href="/static/common/bower/paper-toast/paper-toast.html")
 link(rel="import", href="/static/common/bower/iron-form/iron-form.html")
-link(rel="import", href="/app-render/framework/crouton-card/crouton-card.jade")
+link(rel="import", href="/app-render/framework/crouton-card/crouton-card.pug")
 
 
 dom-module(id="crouton-connect-mqtt")
@@ -155,6 +155,8 @@ dom-module(id="crouton-connect-mqtt")
           this.croutonDashboard = document.getElementById("crouton-dashboard");
           if(this.wssProtocol == true){
             this.protocol = "ws";
+          } else {
+            this.protocol = null;
           }
 
           this.connecting = true;
@@ -304,6 +306,7 @@ dom-module(id="crouton-connect-mqtt")
             this.saveUsernamePassword = false;
             this.username = "";
             this.password = "";
+            this.wssProtocol = false;
             this.fire('makeToast', { message: "MQTT settings removed", duration: 2000, status: "check-circle" });
           }
           else {

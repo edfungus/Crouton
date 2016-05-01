@@ -1,7 +1,9 @@
 [Crouton](http://crouton.mybluemix.net/)
 ================
 
-[http://crouton.mybluemix.net/]
+[![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/edfungus/Crouton?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
+http://crouton.mybluemix.net/
 
 Crouton is a dashboard that lets you visualize and control your IOT devices with minimal setup. Essentially, it is the easiest dashboard to setup for any IOT hardware enthusiast using only MQTT and JSON.
 

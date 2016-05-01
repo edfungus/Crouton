@@ -1,10 +1,10 @@
 link(rel="import", href="/static/common/bower/polymer/polymer.html")
-link(rel="import", href="/app-render/framework/crouton-card/crouton-card.jade")
-link(rel="import", href="/app-render/framework/crouton-connect-mqtt/crouton-connect-mqtt.jade")
-link(rel="import", href="/app-render/framework/crouton-devices/crouton-devices.jade")
-link(rel="import", href="/app-render/framework/crouton-dashboard/crouton-dashboard.jade")
-link(rel="import", href="/app-render/framework/crouton-navigation/crouton-navigation.jade")
-link(rel="import", href="/app-render/framework/crouton-getting-started/crouton-getting-started.jade")
+link(rel="import", href="/app-render/framework/crouton-card/crouton-card.pug")
+link(rel="import", href="/app-render/framework/crouton-connect-mqtt/crouton-connect-mqtt.pug")
+link(rel="import", href="/app-render/framework/crouton-devices/crouton-devices.pug")
+link(rel="import", href="/app-render/framework/crouton-dashboard/crouton-dashboard.pug")
+link(rel="import", href="/app-render/framework/crouton-navigation/crouton-navigation.pug")
+link(rel="import", href="/app-render/framework/crouton-getting-started/crouton-getting-started.pug")
 
 
 dom-module(id="crouton-frame")
@@ -84,6 +84,23 @@ dom-module(id="crouton-frame")
 
         },
         properties: {
+        },
+        //Change navigation page
+        changePage: function(event){
+          if(typeof event == "string"){
+            var newPage = event;
+          } else if(event.target.attributes['data-page'] != null){
+            var newPage = event.target.attributes['data-page'].value;
+          } else {
+            return
+          }
+          if(newPage != this.currentPage){
+            this.currentPage = newPage;
+            // document.querySelector("paper-drawer-panel").scrollTop = 0;
+            $(document).scrollTop = 0;
+            window.history.pushState({"page": this.currentPage}, this.currentPage, "/crouton/" + this.currentPage);
+            this.fire("crouton-page-change", this.currentPage); //Unlike crouton-changePage which triggers a page change, this alerts that the page has been changed
+          }
         },
         selectedPage: function(name, current, extra) {
           extra = extra ? ' ' + extra : ' ';
