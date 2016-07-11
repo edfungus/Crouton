@@ -5,16 +5,14 @@ html(lang="en")
     meta(name='viewport', content='width=device-width, user-scalable=no')
     meta(name="apple-mobile-web-app-capable", content="yes")
     script(src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js")
-    script(src='/app-render/documentation/flatdoc.min.js')
-    link(href='/app-render/documentation/fdstyle.css' rel='stylesheet')
-    link(href='/app-render/documentation/documentation.css' rel='stylesheet')
-    // link(href='/static/common/css/style.css' rel='stylesheet')
-    // link(href='/static/common/css/tmpl.css' rel='stylesheet')
-    script(src='/app-render/documentation/script.min.js')
+    script(src='../js/flatdoc.min.js')
+    link(href='../css/fdstyle.css' rel='stylesheet')
+    link(href='../css/documentation.css' rel='stylesheet')
+    script(src='../js/script.min.js')
 
     script.
       Flatdoc.run({
-        fetcher: Flatdoc.file("/app-render/documentation/documentation.md")
+        fetcher: Flatdoc.file("../documentation.md")
       });
 
 

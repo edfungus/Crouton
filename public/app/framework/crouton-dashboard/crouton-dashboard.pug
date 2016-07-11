@@ -1,9 +1,9 @@
-link(rel="import", href="/static/common/bower/polymer/polymer.html")
-link(rel="import", href="/app-render/framework/crouton-card/crouton-card.pug")
+link(rel="import", href="../static/common/bower/polymer/polymer.html")
+link(rel="import", href="crouton-card.html")
 
 dom-module(id="crouton-dashboard")
   template
-    link(rel="stylesheet", href="crouton-dashboard.css")
+    link(rel="stylesheet", href="../css/crouton-dashboard.css")
     template(is="dom-if" if="{{!numberOfCards}}")
       div(on-click="test").noCards Uh oh, no devices to display
     div#crouton-dashboard-container
@@ -74,10 +74,10 @@ dom-module(id="crouton-dashboard")
               //If component has not been load, load it
               if(this.loadedComponents.indexOf(elementName) == -1){
                 if(this.loadingComponents.indexOf(elementName) == -1){
-                  var path = "app-render/dashboard-elements/";
+                  var path = "./html";
                   var elementImport = document.createElement("link");
                   elementImport.rel = "import";
-                  elementImport.href = path + elementName + "/" + elementName + ".pug";
+                  elementImport.href = path + "/" + elementName + ".html";
                   elementImport.setAttribute("onload","handleLoad(event)");
 
                   document.head.appendChild(elementImport);
