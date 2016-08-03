@@ -14,6 +14,17 @@ Crouton is a dashboard that lets you visualize and control your IOT devices with
 * Easy to use interface
 * It is FREE!
 
+
+Running the Project
+--------------
+
+```
+  $ git clone https://github.com/edfungus/Crouton.git
+  $ npm install
+  $ grunt
+```
+
+
 Getting Started
 --------------
 
