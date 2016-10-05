@@ -2,13 +2,13 @@ doctype html
 html(lang="en")
   head
     title= title
-    base(href="/crouton")
+    base(href="/")
     meta(name='viewport', content='width=device-width, user-scalable=no')
     meta(name="apple-mobile-web-app-capable", content="yes")
     meta(http-equiv="Cache-control", content="public")
 
     //polymer imports
-    link(rel="import", href="/app-render/framework/crouton-frame/crouton-frame.pug")
+    link(rel="import", href="/html/crouton-frame.html")
 
   body(ng-app='Crouton')
     crouton-frame#crouton-frame
@@ -39,3 +39,4 @@ html(lang="en")
           window.fireEvent(event.eventType, event);
         }
       }
+    script(src='http://localhost:35729/livereload.js')

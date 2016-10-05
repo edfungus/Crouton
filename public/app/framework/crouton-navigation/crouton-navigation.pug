@@ -1,9 +1,9 @@
-link(rel="import", href="/static/common/bower/polymer/polymer.html")
+link(rel="import", href="../static/common/bower/polymer/polymer.html")
 
 
 dom-module(id="crouton-navigation")
   template
-    link(rel="stylesheet", href="crouton-navigation.css")
+    link(rel="stylesheet", href="../css/crouton-navigation.css")
     div#logoTab
       div.logoHolder
         div.logoText Crouton
@@ -50,7 +50,7 @@ dom-module(id="crouton-navigation")
             this.currentPage = newPage;
             // document.querySelector("paper-drawer-panel").scrollTop = 0;
             $(document).scrollTop = 0;
-            window.history.pushState({"page": this.currentPage}, this.currentPage, "/crouton/" + this.currentPage);
+            window.history.pushState({"page": this.currentPage}, this.currentPage, "#" + this.currentPage);
             this.fire("crouton-page-change", this.currentPage); //Unlike crouton-changePage which triggers a page change, this alerts that the page has been changed
           }
         },
@@ -67,7 +67,7 @@ dom-module(id="crouton-navigation")
         urlCheck: function(event){
           var locationArray = window.location.pathname.split('/');
           if(locationArray.length <= 2){
-            window.history.replaceState({"page": "gettingStarted"}, "gettingStarted", "/crouton/gettingStarted");
+            window.history.replaceState({"page": "gettingStarted"}, "gettingStarted", "#");
             this.currentPage = "gettingStarted";
           } else {
             this.currentPage = locationArray[2];
