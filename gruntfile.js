@@ -164,7 +164,10 @@ module.exports = function(grunt) {
           livereload: true,
           nospawn: true
         }
-      }
+      },
+      options: {
+			  interval: 2000
+		  }
     }
   });
 
