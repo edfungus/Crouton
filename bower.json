@@ -3,9 +3,10 @@
   "description": "MQTT IOT Dashboard",
   "main": "app.js",
   "authors": [
-    "Edmund Fung <edfungus@gmail.com>"
+    "Edmund Fung"
   ],
   "license": "MIT",
+  "homepage": "https://github.com/wickwire/Crouton",
   "ignore": [
     "**/.*",
     "node_modules",
@@ -16,24 +17,24 @@
   ],
   "dependencies": {
     "chartist": "*",
-    "ev-emitter": "~1.0.0",
     "desandro-matches-selector": "~2.0.0",
-    "draggabilly": "*",
+    "ev-emitter": "~1.0.0",
     "fizzy-ui-utils": "~2.0.0",
-    "fontawesome-iconset": "edfungus/fontawesome-iconset",
-    "font-roboto": "PolymerElements/font-roboto#^1.0.1",
     "font-awesome": "*",
+    "draggabilly": "*",
+    "font-roboto": "PolymerElements/font-roboto#^1.0.1",
+    "fontawesome-iconset": "edfungus/fontawesome-iconset",
     "iron-a11y-announcer": "PolymerElements/iron-a11y-announcer#^1.0.0",
-    "iron-a11y-keys-behavior": "polymerelements/iron-a11y-keys-behavior#^1.0.0",
-    "iron-autogrow-textarea": "PolymerElements/iron-autogrow-textarea#^1.0.0",
+    "iron-a11y-keys-behavior": "PolymerElements/iron-a11y-keys-behavior#^1.0.0",
     "iron-ajax": "PolymerElements/iron-ajax#^1.0.0",
+    "iron-autogrow-textarea": "PolymerElements/iron-autogrow-textarea#^1.0.0",
     "iron-checked-element-behavior": "PolymerElements/iron-checked-element-behavior#^1.0.0",
     "iron-collapse": "PolymerElements/iron-collapse#^1.0.0",
     "iron-dropdown": "PolymerElements/iron-dropdown#^1.0.0",
     "iron-form": "PolymerElements/iron-form",
     "iron-image": "PolymerElements/iron-image#^1.2.0",
-    "iron-media-query": "PolymerElements/iron-media-query#^1.0.0",
     "iron-input": "PolymerElements/iron-input#^1.0.0",
+    "iron-media-query": "PolymerElements/iron-media-query#^1.0.0",
     "iron-menu-behavior": "PolymerElements/iron-menu-behavior#^1.0.0",
     "iron-range-behavior": "PolymerElements/iron-range-behavior#^1.0.0",
     "jquery": ">=2.1.1",
@@ -46,8 +47,8 @@
     "paper-checkbox": "PolymerElements/paper-checkbox",
     "paper-drawer-panel": "PolymerElements/paper-drawer-panel",
     "paper-dropdown-menu": "PolymerElements/paper-dropdown-menu",
-    "paper-header-panel": "PolymerElements/paper-header-panel",
     "paper-fab": "PolymerElements/paper-fab",
+    "paper-header-panel": "PolymerElements/paper-header-panel",
     "paper-icon-button": "PolymerElements/paper-icon-button",
     "paper-item": "PolymerElements/paper-item",
     "paper-listbox": "polymerelements/paper-listbox",
@@ -55,7 +56,6 @@
     "paper-progress": "PolymerElements/paper-progress#^1.0.0",
     "paper-slider": "PolymerElements/paper-slider",
     "paper-toast": "PolymerElements/paper-toast",
-    "paper-toggle-button": "PolymerElements/paper-toggle-button",
-    "polymer": "Polymer/polymer#~1.4.0"
+    "paper-toggle-button": "PolymerElements/paper-toggle-button"
   }
 }
