@@ -44,10 +44,12 @@ function build_device_json(devices_config)
 
     print("Building device json")
     for name, value in pairs(devices_config) do
-        print("Creating json for " .. name)
-        deviceJson["deviceInfo"]["endPoints"][name] = build_device(value)
+        if name ~= "loops" then
+            print("Creating json for " .. name)
+            deviceJson["deviceInfo"]["endPoints"][name] = build_device(value)
+        end
     end
     print("Got " .. cjson.encode(deviceJson))
-    return cjson.encode(deviceJson)
+    return deviceJson
 end
 

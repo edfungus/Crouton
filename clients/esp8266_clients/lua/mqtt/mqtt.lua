@@ -14,7 +14,7 @@ function setup_mqtt(mqtt_config, deviceJson)
 
     m:on("connect", function(con)
       print("Connected (callback)")
-      publish_data("/outbox/"..CLIENTID.."/deviceInfo", deviceJson)
+      publish_data("/outbox/"..CLIENTID.."/deviceInfo", cjson.encode(deviceJson))
       print("Subscribing")
       mqtt_sub()
     end)
@@ -24,10 +24,20 @@ function setup_mqtt(mqtt_config, deviceJson)
       topicTable = explode("/", topic)
       if topicTable[3] == CLIENTID then
          if topicTable[2] == "inbox" then
+
+           if topicTable[4] == "refresh" then
+               for device, loop in pairs(devices_config.loops) do
+                   loop(devices_config[device], deviceJson.deviceInfo.endPoints[device])
+               end
+           end
+
            if topicTable[4] == "deviceInfo" then
+               for device, loop in pairs(devices_config.loops) do
+                   loop(devices_config[device], deviceJson.deviceInfo.endPoints[device])
+               end
                print("Publishing device info")
-               publish_data("/outbox/"..CLIENTID.."/deviceInfo", deviceJson)
-               print(deviceJson)
+               publish_data("/outbox/"..CLIENTID.."/deviceInfo", cjson.encode(deviceJson))
+               print(cjson.encode(deviceJson))
            else
                print("Calling device " .. topicTable[4])
                callbacks[topicTable[4]](devices_config[topicTable[4]], cjson.decode(msg))
@@ -60,11 +70,9 @@ function mqtt_sub()
 end
 
 function publish_data(topic, data)
-    print(".")
+    print("publishing to topic " .. topic)
     if pub_sem == 0 then
         pub_sem = 1
         m:publish(topic, data,0,0, function(conn) pub_sem = 0 end)
     end
 end
-
-
