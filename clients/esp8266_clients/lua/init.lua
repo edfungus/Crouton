@@ -1,22 +1,46 @@
-print('init.lua ver 1.2')
-wifi.setmode(wifi.STATION)
-print('set mode=STATION (mode='..wifi.getmode()..')')
-print('MAC: ',wifi.sta.getmac())
-print('chip: ',node.chipid())
-print('heap: ',node.heap())
+dofile("config_config.lua")
 
---include json encoder/decoder
-json = require "cjson"
-
--- wifi config start
-wifi.sta.config("SSID","PASSWORD")
--- wifi config end
-
-print('Starting up in 5 seconds!')
-
-function startup()
-    print('Starting up...')
-    dofile('main.lua')
+function user_start()
+    if file.open("init.lua") ~= nil then
+        print("Running")
+        file.close("init.lua")
+        dofile("main.lua")
     end
+end
 
-tmr.alarm(0,5000,0,startup)
+function start(config)
+    tmr.create():alarm(1000, tmr.ALARM_AUTO, function(cb_timer)
+       cb_timer:unregister()
+       if config.automatic then
+           print("AP UP")
+           wifi.setmode(wifi.STATIONAP)
+           wifi.ap.config({ssid="ConfigureCrouton", auth=wifi.OPEN})
+           enduser_setup.manual(true)
+           enduser_setup.start(
+             function()
+               print("Connected to wifi as:" .. wifi.sta.getip())
+             end,
+             function(err, str)
+               print("Err " .. str)
+             end
+           );
+       else
+           print("Connected to WiFi AP (" .. config.essid .. ")")
+           print("IP address: " .. config.ip)
+           wifi.setmode(wifi.STATION)
+           wifi.sta.config(config.essid, config.pass)
+           wifi.sta.setip({
+             ip = config.ip,
+             netmask = "255.255.255.0",
+             gateway = config.gateway,
+           })
+       end
+
+       print("You have 3 seconds to abort")
+
+       tmr.create():alarm(3000, tmr.ALARM_SINGLE, user_start)
+
+    end)
+end
+
+start(config)

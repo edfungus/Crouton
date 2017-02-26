@@ -1,0 +1,1 @@
+cd build; for file in *; do nodemcu-uploader upload $file; done; cd ..
