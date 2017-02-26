@@ -57,5 +57,8 @@
     "paper-toast": "PolymerElements/paper-toast",
     "paper-toggle-button": "PolymerElements/paper-toggle-button",
     "polymer": "Polymer/polymer#~1.4.0"
+  },
+  "resolutions": {
+    "polymer": "^1.1.0"
   }
 }
