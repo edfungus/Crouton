@@ -56,6 +56,10 @@
     "paper-progress": "PolymerElements/paper-progress#^1.0.0",
     "paper-slider": "PolymerElements/paper-slider",
     "paper-toast": "PolymerElements/paper-toast",
-    "paper-toggle-button": "PolymerElements/paper-toggle-button"
+    "paper-toggle-button": "PolymerElements/paper-toggle-button",
+    "polymer": "Polymer/polymer#~1.4.0"
+  },
+  "resolutions": {
+    "polymer": "^1.1.0"
   }
 }
