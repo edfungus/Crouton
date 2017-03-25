@@ -6,7 +6,6 @@
     "Edmund Fung"
   ],
   "license": "MIT",
-  "homepage": "https://github.com/wickwire/Crouton",
   "ignore": [
     "**/.*",
     "node_modules",
