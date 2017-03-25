@@ -1,7 +1,7 @@
 [Crouton](http://crouton.mybluemix.net/)
 ================
 
-[![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/edfungus/Crouton?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Join the chat at https://gitter.im/edfungus/Crouton](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/edfungus/Crouton?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 http://crouton.mybluemix.net/
 
