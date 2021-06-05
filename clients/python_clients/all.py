@@ -224,7 +224,7 @@ def on_message(client, userdata, msg):
         client.publish("/outbox/"+clientName+"/barLightLevel", '{"value":30}')
         client.publish("/outbox/"+clientName+"/customMessage", '{"value":"Happy Hour is NOW!"}')
         client.publish("/outbox/"+clientName+"/discoLights", '{"red":0,"green":0,"blue":0}')
-        print "Reseting values...."
+        print("Reseting values....")
 
 
 
