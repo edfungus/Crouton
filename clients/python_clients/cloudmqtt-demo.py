@@ -177,7 +177,7 @@ device = json.loads(j)
 device["deviceInfo"]["name"] = clientName
 deviceJson = json.dumps(device)
 
-print "Client Name is: " + clientName
+print( "Client Name is: " + clientName)
 
 #callback when we recieve a connack
 def on_connect(client, userdata, flags, rc):
@@ -228,7 +228,7 @@ def on_message(client, userdata, msg):
         client.publish("/outbox/"+clientName+"/barLightLevel", '{"value":30}')
         client.publish("/outbox/"+clientName+"/customMessage", '{"value":"Happy Hour is NOW!"}')
         client.publish("/outbox/"+clientName+"/discoLights", '{"red":0,"green":0,"blue":0}')
-        print "Reseting values...."
+        print("Reseting values....")
 
 
 
