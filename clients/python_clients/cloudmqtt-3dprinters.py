@@ -1,10 +1,16 @@
+# -*- coding: iso-8859-15 -*-
+
 import paho.mqtt.client as mqtt
 import time
 import json
 import random
 
 
-clientName = "crouton-test-client-" # + str(random.randint(1, 100)) (Change this as same names will conflict)
+
+clientPassword = "password"
+clientName = "esp8266-12-"+clientPassword
+mqttBrokerName = "m11.cloudmqtt.com"
+mqttBrokerPort = "12002"
 
 #device setup
 j = """
@@ -13,23 +19,7 @@ j = """
         "status": "good",
         "color": "#4D90FE",
         "endPoints": {
-            "barDoor": {
-                "units": "people entered",
-                "values": {
-                    "value": 34
-                },
-                "card-type": "crouton-simple-text",
-                "title": "Bar Main Door"
-            },
-            "drinks": {
-                "units": "drinks",
-                "values": {
-                    "value": 0
-                },
-                "card-type": "crouton-simple-text",
-                "title": "Drinks Ordered"
-            },
-            "danceLights": {
+            "ledlighting": {
                 "values": {
                     "value": true
                 },
@@ -38,132 +28,46 @@ j = """
                     "false": "OFF"
                 },
                 "card-type": "crouton-simple-toggle",
-                "title": "Dance Floor Lights"
+                "title": "Iluminação"
             },
-            "backDoorLock": {
+            "toggleSwitchCTC": {
                 "values": {
-                    "value": false
+                    "value": true
                 },
                 "labels":{
-                    "true": "Locked",
-                    "false": "Unlocked"
-                },
-                "icons": {
-                    "true": "lock",
-                    "false": "lock"
+                    "true": "ON",
+                    "false": "OFF"
                 },
                 "card-type": "crouton-simple-toggle",
-                "title": "Employee Door"
+                "title": "CTC-3D"
             },
-            "lastCall": {
+            "toggleSwitchPrusa": {
                 "values": {
                     "value": true
                 },
-                "icons": {
-                    "icon": "bell"
+                "labels":{
+                    "true": "ON",
+                    "false": "OFF"
                 },
-                "card-type": "crouton-simple-button",
-                "title": "Last Call Bell"
+                "card-type": "crouton-simple-toggle",
+                "title": "Prusa I3 X"
             },
-            "reset": {
-                "values": {
-                    "value": true
-                },
-                "icons": {
-                    "icon": "cutlery"
-                },
-                "card-type": "crouton-simple-button",
-                "title": "Reset Cards"
-            },
-            "customMessage": {
-                "values": {
-                    "value": "Happy Hour is NOW!"
-                },
-                "card-type": "crouton-simple-input",
-                "title": "Billboard Message"
-            },
-            "moods": {
-                "values": {
-                    "value": "Crazy"
-                },
-                "options": ["Crazy", "Happy", "Mellow", "Sublime", "Peppy"],
-                "card-type": "crouton-simple-dropdown",
-                "title": "Mood Lights"
-            },
-            "barLightLevel": {
-                "values": {
-                    "value": 30
-                },
-                "min": 0,
-                "max": 100,
-                "units": "percent",
-                "card-type": "crouton-simple-slider",
-                "title": "Bar Light Brightness"
-            },
-            "discoLights": {
-                "values": {
-                    "red": 0,
-                    "green": 0,
-                    "blue": 0
-                },
-                "min": 0,
-                "max": 255,
-                "card-type": "crouton-rgb-slider",
-                "title": "Disco Lights"
-            },
-            "drinksOrdered": {
-                "values": {
-                    "labels": ["Scotch","Rum & Coke","Shiner","Margarita", "Other"],
-                    "series": [10,20,30,10,30]
-                },
-                "total": 100,
-                "centerSum": false,
-                "card-type": "crouton-chart-donut",
-                "title": "Drinks Ordered"
-            },
-            "occupancy": {
-                "values": {
-                    "labels": [],
-                    "series": [76]
-                },
-                "total": 100,
-                "centerSum": true,
-                "units": "%",
-                "card-type": "crouton-chart-donut",
-                "title": "Occupancy"
-            },
-            "temperature": {
-                "values": {
-                    "labels": [1],
-                    "series": [[60]],
-                    "update": ""
-                },
-                "max": 11,
-                "low": 58,
-                "high": 73,
-                "card-type": "crouton-chart-line",
-                "title": "Temperature (F)"
-            },
-            "rgb": {
-				"min": 0,
-				"card-type": "crouton-rgb-slider",
-				"values": {
-					"red": 0,
-					"blue": 0,
-					"green": 0
-				},
-				"max": 255,
-				"title": "RGB LED <3"
-			},
-            "youTubeStream": {
+            "youTubeStreamCTC": {
                 "values": {
                     "youtubeID": "GZnb3jQ2YZo"
                 },
                 "card-type": "crouton-video-youtube",
-                "title": "YouTube Stream"
+                "title": "CTC-3D"
+            },
+            "youTubeStreamPrusa": {
+                "values": {
+                    "youtubeID": "GZnb3jQ2YZo"
+                },
+                "card-type": "crouton-video-youtube",
+                "title": "Prusa I3 X"
             }
         },
-        "description": "Kroobar's IOT devices"
+        "description": "Impressão 3D"
     }
 }
 
@@ -173,7 +77,7 @@ device = json.loads(j)
 device["deviceInfo"]["name"] = clientName
 deviceJson = json.dumps(device)
 
-print "Client Name is: " + clientName
+print( "Client Name is: " + clientName)
 
 #callback when we recieve a connack
 def on_connect(client, userdata, flags, rc):
@@ -232,9 +136,10 @@ def on_disconnect(client, userdata, rc):
     if rc != 0:
         print("Broker disconnection")
     time.sleep(10)
-    client.connect("test.mosquitto.org", 1883, 60)
+    client.username_pw_set(clientName, clientPassword)
+    client.connect(mqttBrokerName, mqttBrokerPort, 60)
 
-client = mqtt.Client(clientName)
+client = mqtt.Client(clientName,clientPassword)
 client.on_connect = on_connect
 client.on_message = on_message
 client.on_disconnect = on_disconnect
@@ -243,8 +148,10 @@ client.will_set('/outbox/'+clientName+'/lwt', 'anythinghere', 0, False)
 
 
 # client.connect("localhost", 1883, 60)
-client.connect("test.mosquitto.org", 1883, 60)
+# client.connect("test.mosquitto.org", 1883, 60)
 # client.connect("192.168.99.100", 1883, 60)
+client.username_pw_set(clientName, clientPassword)
+client.connect(mqttBrokerName, mqttBrokerPort, 60)
 
 
 client.subscribe("/inbox/"+clientName+"/deviceInfo")

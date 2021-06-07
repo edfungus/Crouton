@@ -1,0 +1,83 @@
+link(rel="import", href="../static/common/bower/polymer/polymer.html")
+link(rel="import", href="crouton-card.html")
+
+
+dom-module(id="crouton-chart-donut")
+  template
+    link(rel="stylesheet", href="../css/crouton-chart-donut.css")
+    crouton-card
+      div.dragger
+      div.expand
+        div#chartDisplay
+        div.textDisplay {{centerMessage}}
+        div.unitDisplay {{endPointJson.units}}
+        div.titleDisplay {{endPointJson.title}}
+
+  script.
+    (function() {
+      Polymer({
+        is: "crouton-chart-donut",
+        properties: {
+          endPointJson: {
+            type: Object,
+            notify: true
+          }
+        },
+        observers: [
+          'newValues(endPointJson.values.*)'
+        ],
+        attached: function(){
+          if(!Array.isArray(this.endPointJson.values.series) && typeof this.endPointJson.values.series === "number"){
+            this.endPointJson.values.series = [this.endPointJson.values.series];
+          }
+
+          this.chart = new Chartist.Pie(this.$.chartDisplay, {
+            labels: this.endPointJson.values.labels,
+            series: this.endPointJson.values.series
+          }, {
+            donut: true,
+            donutWidth: 20,
+            startAngle: 0,
+            total: this.endPointJson.total,
+            labelDirection: "explode",
+            labelOffset: -5,
+            width: "210px",
+            height: "150px"
+          });
+
+          if(this.endPointJson.centerSum){
+            this.centerMessage = this.endPointJson.values.series.reduce(function(a, b) {
+              return a + b;
+            });
+          } else {
+            this.centerMessage = this.endPointJson.values.message;
+          }
+
+          var that = this;
+          document.getElementById("crouton-frame").addEventListener("crouton-page-change", function(event){
+            if(event.detail == "dashboard"){
+              that.async(function(){
+                that.chart.update();
+              },100);
+            }
+          });
+          //Reupdate chart so that it will fit correctly
+          this.async(function(){
+            that.chart.update();
+          },200);
+        },
+        newValues: function(changeRecord){
+          if(this.endPointJson.centerSum && Array.isArray(this.endPointJson.values.series)){
+            this.centerMessage = this.endPointJson.values.series.reduce(function(a, b) {
+              return a + b;
+            });
+          }
+          if(this.chart){
+            this.chart.update({
+              labels: this.endPointJson.values.labels,
+              series: this.endPointJson.values.series
+            });
+          }
+        }
+      });
+    }());

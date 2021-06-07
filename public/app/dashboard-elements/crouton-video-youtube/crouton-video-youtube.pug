@@ -1,0 +1,31 @@
+link(rel="import", href="../static/common/bower/polymer/polymer.html")
+link(rel="import", href="crouton-card.html")
+
+
+dom-module(id="crouton-video-youtube")
+  template
+    link(rel="stylesheet", href="../css/crouton-video-youtube.css")
+    crouton-card
+      div.dragger
+      div.expand
+        iframe(src="{{youtubeURL}}" title="YouTube video player" allowfullscreen="1", class="style-scope google-youtube", id="player", frameborder="0", height="100%", width="100%")
+        div.titleDisplay {{displayStatusText}}
+
+  script.
+    (function() {
+      Polymer({
+        is: "crouton-video-youtube",
+        ready: function() {
+        },
+        properties: {
+          endPointJson: {
+            type: Object,
+            notify: true
+          }
+        },
+        attached: function(){
+          this.displayStatusText = this.endPointJson.title;
+          this.youtubeURL = "https://www.youtube.com/embed/" + this.endPointJson.values.youtubeID + "?playsinline=1&amp;controls=0&amp;autohide=0&amp;autoplay=1&amp;video-id=GZnb3jQ2YZo";
+        }
+      });
+    }());

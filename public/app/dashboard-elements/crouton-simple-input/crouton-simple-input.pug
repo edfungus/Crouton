@@ -1,0 +1,77 @@
+link(rel="import", href="../static/common/bower/polymer/polymer.html")
+link(rel="import", href="../static/common/bower/paper-input/paper-textarea.html")
+link(rel="import", href="crouton-card.html")
+
+
+dom-module(id="crouton-simple-input")
+  template
+    link(rel="stylesheet", href="../css/crouton-simple-input.css")
+    crouton-card
+      div.dragger
+      div.expand
+        div.textDisplay
+          template(is="dom-if" if="{{!showInputBox}}")
+            span.constrictBox {{endPointJson.values.value}}
+          template(is="dom-if" if="{{showInputBox}}")
+            paper-textarea(label="{{placeholderText}}", value="{{newMessage::input}}", max-rows="7").constrictBox
+          span.gradient
+        div.unitDisplay
+          template(is="dom-if" if="{{!showInputBox}}")
+            span #[i(on-click="editMessage").fa.fa-pencil]
+          template(is="dom-if" if="{{showInputBox}}")
+            span #[i(on-click="cancelEditMessage").fa.fa-times] #[span  ] #[i(on-click="sendMessage").fa.fa-check]
+        div.titleDisplay {{endPointJson.title}}
+
+  style(is="custom-style").
+    paper-textarea{
+      --paper-input-container-focus-color: grey;
+    }
+
+
+  script.
+    (function() {
+      Polymer({
+        is: "crouton-simple-input",
+        properties: {
+          endPointJson: {
+            type: Object,
+            notify: true
+          },
+          deviceName :{
+            type: String
+          },
+          endPointName :{
+            type: String
+          }
+        },
+        observers: [
+          'newValues(endPointJson.values.*)'
+        ],
+        ready: function(){
+          this.showInputBox = false;
+          this.mqtt = document.getElementById("crouton-mqtt");
+        },
+        attached: function(){
+          if(this.endPointJson.placeholder){
+            this.placeholderText = this.endPointJson.placeholder;
+          } else {
+            this.placeholderText = "New Message";
+          }
+        },
+        newValues: function(changeRecord){
+        },
+        editMessage: function(){
+          this.showInputBox = true;
+        },
+        cancelEditMessage: function(){
+          this.showInputBox = false;
+        },
+        sendMessage: function(){
+          var newValue = {};
+          newValue.value = this.newMessage;
+          this.mqtt.publishMessage("/inbox/"+this.deviceName+"/"+this.endPointName,JSON.stringify(newValue));
+          this.showInputBox = false;
+          this.newMessage = "";
+        }
+      });
+    }());

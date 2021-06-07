@@ -1,0 +1,80 @@
+link(rel="import", href="../static/common/bower/polymer/polymer.html")
+
+
+dom-module(id="crouton-navigation")
+  template
+    link(rel="stylesheet", href="../css/crouton-navigation.css")
+    div#logoTab
+      div.logoHolder
+        div.logoText Crouton
+      div.rightSide
+        div(on-click="comingSoon").buttonText.signUpText Sign up
+        div(on-click="comingSoon").buttonText.logInText Log in
+    div#crouton-page-navigation.grid__col.grid__col--12-of-12
+      div.navbar
+        span(data-page="gettingStarted", class$="{{selectedNavigation('gettingStarted',currentPage,'navTab')}}", on-click="changePage") Getting Started
+        span(data-page="dashboard", class$="{{selectedNavigation('dashboard',currentPage,'navTab')}}", on-click="changePage") Dashboard
+        span(data-page="connections", class$="{{selectedNavigation('connections',currentPage,'navTab')}}", on-click="changePage") Connections
+
+  script.
+    (function() {
+      Polymer({
+        is: "crouton-navigation",
+        ready: function() {
+          this.urlCheck();
+
+          var that = this;
+          addEventListener('popstate', this.urlCheck.bind(this));
+          document.getElementById("crouton-frame").addEventListener('crouton-changePage', function(event){
+            that.changePage(event.detail.page);
+          });
+        },
+        properties: {
+          currentPage: {
+            type: String,
+            value: '',
+            notify: true,
+            reflectToAttribute: true
+          }
+        },
+        //Change navigation page
+        changePage: function(event){
+          if(typeof event == "string"){
+            var newPage = event;
+          } else if(event.target.attributes['data-page'] != null){
+            var newPage = event.target.attributes['data-page'].value;
+          } else {
+            return
+          }
+          if(newPage != this.currentPage){
+            this.currentPage = newPage;
+            // document.querySelector("paper-drawer-panel").scrollTop = 0;
+            $(document).scrollTop = 0;
+            window.history.pushState({"page": this.currentPage}, this.currentPage, "#" + this.currentPage);
+            this.fire("crouton-page-change", this.currentPage); //Unlike crouton-changePage which triggers a page change, this alerts that the page has been changed
+          }
+        },
+        //Mark current page with accent on navigation
+        selectedNavigation: function(name, current, extra){
+          extra = extra ? ' ' + extra : ' ';
+          if(name === current){
+            return "active" + extra
+          } else {
+            return "" + extra
+          }
+        },
+        //Make sure we are on the right page from URL
+        urlCheck: function(event){
+          var locationArray = window.location.pathname.split('/');
+          if(locationArray.length <= 2){
+            window.history.replaceState({"page": "gettingStarted"}, "gettingStarted", "#");
+            this.currentPage = "gettingStarted";
+          } else {
+            this.currentPage = locationArray[2];
+          }
+        },
+        comingSoon: function(){
+          this.fire('makeToast', { message: "This feature is coming soon!", duration: 2000, status: "exclamation-circle" });
+        }
+      });
+    }());

@@ -1,0 +1,47 @@
+link(rel="import", href="../static/common/bower/polymer/polymer.html")
+
+dom-module(id="crouton-card")
+  template
+    link(rel="stylesheet", href="../css/crouton-card.css")
+    div(class$="{{checkDropShadow(dropShadow)}}")
+      div.cardInner
+        content
+      div(class$="{{checkBottomBar(bottomBar)}}")
+
+  script.
+    (function() {
+      Polymer({
+        is: "crouton-card",
+        ready: function() {
+        },
+        properties: {
+          bottomBar: {
+            type: String,
+            value: "true"
+          },
+          dropShadow: {
+            type: String,
+            value: "true"
+          }
+        },
+        listeners: {
+
+        },
+        //See if we should display bottom bottomBar
+        checkBottomBar: function(bottomBar) {
+          if(this.bottomBar === "false") {
+            return "cardBorder hidden"
+          } else {
+            return "cardBorder"
+          }
+        },
+        //See if we should have a dropShadow
+        checkDropShadow: function(dropShadow) {
+          if(this.dropShadow === "false") {
+            return ""
+          } else {
+            return "dropShadow"
+          }
+        }
+      });
+    }());

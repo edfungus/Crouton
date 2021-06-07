@@ -1,0 +1,42 @@
+doctype html
+html(lang="en")
+  head
+    title= title
+    base(href="/")
+    meta(name='viewport', content='width=device-width, user-scalable=no')
+    meta(name="apple-mobile-web-app-capable", content="yes")
+    meta(http-equiv="Cache-control", content="public")
+
+    //polymer imports
+    link(rel="import", href="/html/crouton-frame.html")
+
+  body(ng-app='Crouton')
+    crouton-frame#crouton-frame
+
+    //css import
+    each file in css
+      link(rel='stylesheet', href=file)
+
+    //js imports
+    //external
+    each file in jsExternal
+      script(src=file)
+
+    script.
+      function handleLoad(e) {
+        var card = e.target.href.split("/");
+        card = card[card.length-1];
+        card = card.split(".")[0];
+        if (document.createEvent) {
+          event = document.createEvent("HTMLEvents");
+          event.card = card;
+          event.initEvent("crouton-import-loaded", true, true);
+          window.dispatchEvent(event);
+        } else {
+          event = document.createEventObject();
+          event.card = card;
+          event.eventType = "crouton-import-loaded";
+          window.fireEvent(event.eventType, event);
+        }
+      }
+    script(src='http://localhost:35729/livereload.js')

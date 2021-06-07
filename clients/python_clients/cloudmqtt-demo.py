@@ -4,7 +4,11 @@ import json
 import random
 
 
-clientName = "crouton-test-client-" # + str(random.randint(1, 100)) (Change this as same names will conflict)
+
+clientPassword = "cloudmqtt-user-pass"
+clientName = "cloudmqtt-user"
+mqttBrokerName = "m11.cloudmqtt.com"
+mqttBrokerPort = "12002"
 
 #device setup
 j = """
@@ -173,7 +177,7 @@ device = json.loads(j)
 device["deviceInfo"]["name"] = clientName
 deviceJson = json.dumps(device)
 
-print "Client Name is: " + clientName
+print( "Client Name is: " + clientName)
 
 #callback when we recieve a connack
 def on_connect(client, userdata, flags, rc):
@@ -232,9 +236,10 @@ def on_disconnect(client, userdata, rc):
     if rc != 0:
         print("Broker disconnection")
     time.sleep(10)
-    client.connect("test.mosquitto.org", 1883, 60)
+    client.username_pw_set(clientName, clientPassword)
+    client.connect(mqttBrokerName, mqttBrokerPort, 60)
 
-client = mqtt.Client(clientName)
+client = mqtt.Client(clientName,clientPassword)
 client.on_connect = on_connect
 client.on_message = on_message
 client.on_disconnect = on_disconnect
@@ -243,8 +248,10 @@ client.will_set('/outbox/'+clientName+'/lwt', 'anythinghere', 0, False)
 
 
 # client.connect("localhost", 1883, 60)
-client.connect("test.mosquitto.org", 1883, 60)
+# client.connect("test.mosquitto.org", 1883, 60)
 # client.connect("192.168.99.100", 1883, 60)
+client.username_pw_set(clientName, clientPassword)
+client.connect(mqttBrokerName, mqttBrokerPort, 60)
 
 
 client.subscribe("/inbox/"+clientName+"/deviceInfo")

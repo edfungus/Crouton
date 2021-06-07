@@ -1,0 +1,165 @@
+link(rel="import", href="../static/common/bower/polymer/polymer.html")
+link(rel="import", href="crouton-card.html")
+
+dom-module(id="crouton-dashboard")
+  template
+    link(rel="stylesheet", href="../css/crouton-dashboard.css")
+    template(is="dom-if" if="{{!numberOfCards}}")
+      div(on-click="test").noCards Uh oh, no devices to display
+    div#crouton-dashboard-container
+
+
+  style(is="custom-style").
+    paper-input{
+      --paper-input-container-focus-color: grey;
+    }
+
+
+  script.
+    (function() {
+      Polymer({
+        is: "crouton-dashboard",
+        ready: function() {
+          this.cardPrefix = "crouton-";
+          this.cardIndex = {};
+          this.cardValues = {};
+          this.cardsToBeAdded = [];
+
+          var that = this;
+          window.addEventListener("crouton-import-loaded", function(event) {
+            that.push("loadedComponents",event.card);
+            var index = that.loadingComponents.indexOf(event.card)
+            if(index > -1){
+              that.splice("loadingComponents", index, 1);
+            }
+          });
+        },
+        properties: {
+          currentPage: {
+            type: String,
+            value: "",
+            observer: "displayCheck"
+          }
+        },
+        attached: function(){
+          this.loadedComponents = [];
+          this.loadingComponents = [];
+          this.container = document.getElementById("crouton-dashboard-container");
+          this.numberOfCards = 0;
+          this.pckry = new Packery(this.container, {
+            columnWidth: 250,
+            rowHeight: 250,
+            gutter: 20
+          });
+        },
+        updateValue: function(device,address,json){
+          if(this.cardValues[device+address]){
+            var cardValue = this.cardValues[device+address];
+            var update = false;
+            for (var property in json){
+              if(cardValue.hasOwnProperty(property)){
+                try {
+                  this.cardIndex[device+address].set("endPointJson.values."+property, json[property]);
+                }
+                catch(err) {
+                }
+              }
+            }
+          }
+        },
+        addDevice: function(device,deviceJson){
+          for (var address in deviceJson.endPoints){
+            if (deviceJson.endPoints.hasOwnProperty(address)) {
+              var elementName = deviceJson.endPoints[address]["card-type"];
+              //If component has not been load, load it
+              if(this.loadedComponents.indexOf(elementName) == -1){
+                if(this.loadingComponents.indexOf(elementName) == -1){
+                  var path = "./html";
+                  var elementImport = document.createElement("link");
+                  elementImport.rel = "import";
+                  elementImport.href = path + "/" + elementName + ".html";
+                  elementImport.setAttribute("onload","handleLoad(event)");
+
+                  document.head.appendChild(elementImport);
+                  this.push("loadingComponents",elementName);
+                }
+              }
+
+              var element = document.createElement(elementName);
+              element.setAttribute("id", this.cardId(device,address));
+              element.setAttribute("device-name", device);
+              element.setAttribute("end-point-name", address);
+              element.setAttribute("end-point-json", JSON.stringify(deviceJson.endPoints[address]));
+
+              element.style.opacity = "0";
+              this.push("cardsToBeAdded",{element: element, card: elementName});
+
+              this.cardIndex[device+address] = element;
+              this.cardValues[device+address] = deviceJson.endPoints[address].values;
+              this.numberOfCards = this.numberOfCards + 1;
+            }
+          }
+
+          if(this.currentPage == "dashboard"){
+            this.async(this.addPackeryCards,2000);
+          }
+        },
+        removeDeviceEndPoint: function(device,address,alreadyRemoved){
+          this.pckry.remove(this.cardIndex[device+address]);
+          this.container.removeChild(this.cardIndex[device+address]);
+          this.relayout();
+
+          delete this.cardIndex[device+address];
+          delete this.cardValues[device+address];
+          if(!alreadyRemoved){
+            this.numberOfCards = this.numberOfCards - 1;
+          }
+        },
+        displayCheck: function(newValue){
+          if(newValue == "dashboard"){
+            this.addPackeryCards();
+          }
+        },
+        cardId: function(device, address){
+          return this.cardPrefix + device + "-" + address
+        },
+        relayout: function(element){
+          if(element){
+            this.container.appendChild(element);
+            this.pckry.appended(element);
+            var draggie = new Draggabilly(element, {
+                handle: '.dragger'
+            });
+            this.pckry.bindDraggabillyEvents(draggie);
+            element.style.opacity = "1";
+            this.pckry.layout();
+          } else {
+            if(this.pckry){
+              this.pckry.layout();
+            }
+          }
+        },
+        addPackeryCards: function(){
+          if(window.getComputedStyle(document.getElementById("dashboardHolder"),null).getPropertyValue("display") != "none"){
+            if(this.cardsToBeAdded[0]){
+              for(var card = 0; card < this.cardsToBeAdded.length; card){
+                if(this.loadedComponents.indexOf(this.cardsToBeAdded[card].card) > -1){
+                  this.relayout(this.cardsToBeAdded[card].element);
+                  this.splice("cardsToBeAdded", card, 1);
+                } else {
+                  card = card + 1;
+                }
+              }
+              if(this.cardsToBeAdded[0]){
+                this.async(this.addPackeryCards,100);
+              }
+              this.async(this.relayout,500);
+            } else {
+              this.relayout();
+            }
+          } else {
+            this.async(this.addPackeryCards,100);
+          }
+        }
+      });
+    }());

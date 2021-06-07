@@ -1,0 +1,317 @@
+link(rel="import", href="../static/common/bower/polymer/polymer.html")
+link(rel="import", href="../static/common/bower/paper-input/paper-input.html")
+link(rel="import", href="../static/common/bower/paper-button/paper-button.html")
+link(rel="import", href="../static/common/bower/paper-checkbox/paper-checkbox.html")
+link(rel="import", href="../static/common/bower/paper-toast/paper-toast.html")
+link(rel="import", href="../static/common/bower/iron-form/iron-form.html")
+link(rel="import", href="crouton-card.html")
+
+
+dom-module(id="crouton-connect-mqtt")
+  template
+    link(rel="stylesheet", href="../css/crouton-connect-mqtt.css")
+    paper-toast#mqtt-timeout(duration=5000).customToast Connection timeout to MQTT broker #[a(on-click="connectBroker").right Retry]
+    crouton-card(drop-shadow="false", bottom-bar="false").grid__col.grid__col--12-of-12
+      p.header
+        span MQTT Broker
+        span.subTitle {{displayConnected(connected,connecting)}}
+
+      form#mqttConnectForm(is="iron-form", name="connectCrouton").grid.contentMarginFix
+        div.grid__col.grid__col--9-of-12
+          paper-input(label="Broker Address", type="text", value="{{address::input}}", disabled$="{{disableInput(connected)}}", required)
+        div.grid__col.grid__col--3-of-12
+          paper-input(label="Port", type="text", pattern="^[0-9]{1,6}$", value="{{port::input}}", disabled$="{{disableInput(connected)}}", auto-validate, required)
+        div.grid__col.grid__col--12-of-12
+          paper-input(label="Crouton Name", type="text", value="{{clientName::input}}", disabled$="{{disableInput(connected)}}", required)
+        div.grid__col.grid__col--6-of-12
+          paper-input(label="Broker Username (Optional)", type="text", value="{{username::input}}", disabled$="{{disableInput(connected)}}")
+        div.grid__col.grid__col--6-of-12
+          paper-input(label="Broker Password (Optional)", type="password", value="{{password::input}}", disabled$="{{disableInput(connected)}}")
+        div.grid__col.grid__col--9-of-12
+          span.mqttSettingButtons
+            paper-button(type="submit", on-click="saveMqtt", raised).leftBtn Save Settings
+            paper-button(type="submit", on-click="clearMqttSettings", raised).clear Clear Settings
+          span.mqttSettingCheckboxes
+            paper-checkbox(checked="{{autoConnect}}").topMargin Auto-connect
+            paper-checkbox(checked="{{saveUsernamePassword}}") Save username/password (warning: in plaintext)
+            paper-checkbox(checked="{{wssProtocol}}") Secure Websockets (TLS)
+        div.grid__col.grid__col--3-of-12
+          paper-button(type="submit", disabled$="{{validateInput(address,port,clientName,connecting)}}", on-click="toggleConnection", raised).rightBtn {{displayButtonText(connected,connecting)}}
+
+  style(is="custom-style").
+    paper-input{
+      --paper-input-container-focus-color: grey;
+    }
+    .right{
+      margin-left: 24px;
+    }
+
+
+  script.
+    (function() {
+      Polymer({
+        is: "crouton-connect-mqtt",
+        properties: {
+          address: {
+            type: String,
+            value: ""
+          },
+          port: {
+            type: String,
+            value: ""
+          },
+          clientName: {
+            type: String,
+            value: ""
+          },
+          connected: {
+            type: Boolean,
+            value: false,
+            notify: true
+          },
+          connecting: {
+            type: Boolean,
+            value: false
+          },
+          protocol: {
+            type: String,
+            value: ""
+           }
+        },
+        listeners: {
+
+        },
+        ready: function() {
+          this.checkStatusAsync = {};
+          this.checkAutoConnect = {};
+          this.deviceCardPrefix = "crouton-device-";
+        },
+        attached: function() {
+          //prepopulate mqtt settings
+          var mqttSettings = localStorage.getItem("crouton-mqttSettings");
+          if(mqttSettings){
+            var settings = JSON.parse(mqttSettings);
+            this.address = settings.address;
+            this.port = settings.port;
+            this.clientName = settings.clientName;
+            this.autoConnect = settings.autoConnect;
+            this.saveUsernamePassword = settings.saveUsernamePassword;
+            this.username = settings.username;
+            this.password = settings.password;
+            this.wssProtocol = settings.wssProtocol;
+
+            if(this.autoConnect){
+              this.connectBroker();
+            }
+          }
+        },
+        displayConnected: function(connected,connecting){
+          if(connecting){
+            return "connecting"
+          }
+          if(connected){
+            return "connected"
+          } else {
+            return "not connected"
+          }
+        },
+        displayButtonText: function(connected,connecting){
+          if(connecting){
+            return "connecting..."
+          }
+          if(connected){
+            return "disconnect"
+          } else {
+            return "connect"
+          }
+        },
+        validateInput: function(address, port, clientName, connecting){
+          if(this.querySelector('#mqttConnectForm').validate() && !connecting){
+            return false
+          } else {
+            return true
+          }
+        },
+        disableInput: function(connected){
+          if(connected){
+            return true
+          } else {
+            return false
+          }
+        },
+        toggleConnection: function(){
+          if(this.connected){
+            this.disconnectBroker();
+          } else {
+            this.connectBroker();
+          }
+        },
+        showToast: function(id){
+          this.$[id].show();
+        },
+        //MQTT functions
+        connectBroker: function(){
+          var that = this;
+          this.croutonDashboard = document.getElementById("crouton-dashboard");
+          if(this.wssProtocol == true){
+            this.protocol = "ws";
+          } else {
+            this.protocol = null;
+          }
+
+          this.connecting = true;
+          this.client = mqtt.connect({ protocol: this.protocol, port: this.port, host: this.address, path: "/mqtt", keepalive: 10000, clientId: this.clientName, reconnectPeriod: 0, username: this.username || "", password: this.password || ""});
+          this.async(this.noConnection, 3000);
+
+          //on connect
+          this.client.on('connect', function(){
+            that.connecting = false;
+            that.connected = true;
+            that.fire('makeToast', { message: "Connected to MQTT broker", duration: 3000, status: "check-circle" });
+            that.fire('mqttConnection', { connected: that.connected, connecting: that.connecting });
+          });
+          //on disconnect
+          this.client.on('close', function(){
+            that.connecting = false;
+            that.connected = false;
+            that.fire('mqttConnection', { connected: that.connected, connecting: that.connecting });
+            document.getElementById("crouton-devices").disconnectAllDevices();
+            that.fire('makeToast', { message: "Disconnected from MQTT broker", duration: 3000, status: "exclamation-circle" });
+          });
+          //on message
+          this.client.on('message', function (topic, message) {
+            topicSplit = topic.toString().split("/");
+            box = topicSplit[1];
+            name = topicSplit[2];
+            address = topicSplit[3];
+            messageString = message.toString();
+
+            //Waiting for device info to check if device is online
+            if(box === "outbox" && address === "deviceInfo"){
+              if(that.checkAutoConnect[name] || that.checkStatusAsync[name]){
+                if(that.checkStatusAsync[name]){
+                  that.cancelAsync(that.checkStatusAsync[name]);//cancel timeout
+                  delete that.checkStatusAsync[name]; //destroy timeout element to say we are done checking
+                }
+                if(that.checkAutoConnect[name]){
+                  delete that.checkAutoConnect[name];
+                }
+                that.unsubscribeAddress("/outbox/"+name+"/deviceInfo");
+                messageObj = JSON.parse(messageString);
+                var deviceCard = document.getElementById(that.deviceCardPrefix + name);
+                deviceCard.connectionStatus = "connected";//chance connection status
+                deviceCard.deviceJson = messageObj.deviceInfo;//return device json to device card
+                if(that.croutonDashboard == null){
+                  that.croutonDashboard = document.getElementById("crouton-dashboard");
+                }
+                that.croutonDashboard.addDevice(name,messageObj.deviceInfo);
+                deviceCard.subscribeDevice();
+                that.fire('makeToast', { message: "Device <b>" + name + "</b> has been connected", duration: 3000, status: "check-circle" });
+              }
+              return;
+            }
+
+            //lwt - device has disconnected
+            if(box === "outbox" && address === "lwt"){
+              var deviceCard = document.getElementById(that.deviceCardPrefix + name);
+              deviceCard.forcedDisconnect(messageString);
+              return;
+            }
+
+            //If we are getting a message
+            if(box === "outbox"){
+              try{
+                var messageObj = JSON.parse(messageString);
+                that.croutonDashboard.updateValue(name,address,messageObj);
+                return;
+              } catch(error){
+                console.log("Incoming message not JSON? From device: " + name + " at " + address);
+              }
+            }
+          });
+
+
+        },
+        disconnectBroker: function(){
+          this.client.end();
+        },
+        publishMessage: function(topic, message){
+          if(typeof message != "string"){
+            message = JSON.stringify(message);
+          }
+          this.client.publish(topic, message);
+        },
+        noConnection: function(){
+          if(this.connecting == true){
+            this.connecting = false;
+            this.connected = false;
+            this.showToast('mqtt-timeout');
+          }
+        },
+        subscribeAddress: function(address){
+          this.client.subscribe(address);
+        },
+        unsubscribeAddress: function(address){
+          this.client.unsubscribe(address);
+        },
+        connectDevice: function(name,object){
+          this.subscribeAddress("/outbox/"+name+"/deviceInfo");
+          this.client.publish("/inbox/"+name+"/deviceInfo", "get");
+          this.checkStatusAsync[name] = this.async(function(){
+            object.connectionStatus = "not connected";
+            this.fire('makeToast', { message: "Device <b>" + name + "</b> failed to connect", duration: 3000, status: "exclamation-circle" });
+          }, 5000);
+        },
+        storageAvailable: function(type) {
+        	try {
+        		var storage = window[type],
+        			x = '__storage_test__';
+        		storage.setItem(x, x);
+        		storage.removeItem(x);
+        		return true;
+        	}
+        	catch(e) {
+        		return false;
+        	}
+        },
+        saveMqtt: function(){
+          if (this.storageAvailable('localStorage')) {
+            var mqttSettings = {};
+            mqttSettings.address = this.address;
+            mqttSettings.port = this.port;
+            mqttSettings.clientName = this.clientName;
+            mqttSettings.autoConnect = this.autoConnect;
+            mqttSettings.saveUsernamePassword = this.saveUsernamePassword;
+            mqttSettings.wssProtocol = this.wssProtocol;
+
+            if(this.saveUsernamePassword){
+              mqttSettings.username = this.username;
+              mqttSettings.password = this.password;
+            }
+
+            localStorage.setItem("crouton-mqttSettings", JSON.stringify(mqttSettings));
+            this.fire('makeToast', { message: "MQTT settings saved", duration: 2000, status: "check-circle" });
+          }
+          else {
+            this.fire('makeToast', { message: "Localstorage not detected", duration: 2000, status: "exclamation-circle" });
+          }
+        },
+        clearMqttSettings: function(){
+          if (this.storageAvailable('localStorage')) {
+            localStorage.removeItem("crouton-mqttSettings");
+            this.address = "";
+            this.port = "";
+            this.clientName = "";
+            this.autoConnect = false;
+            this.saveUsernamePassword = false;
+            this.username = "";
+            this.password = "";
+            this.wssProtocol = false;
+            this.fire('makeToast', { message: "MQTT settings removed", duration: 2000, status: "check-circle" });
+          }
+          else {
+            this.fire('makeToast', { message: "Localstorage not detected", duration: 2000, status: "exclamation-circle" });
+          }
+        }
+      });
+    }());

@@ -1,0 +1,118 @@
+<link rel="import" href="../static/common/bower/polymer/polymer.html"/>
+<link rel="import" href="crouton-card.html"/>
+<link rel="import" href="crouton-connect-mqtt.html"/>
+<link rel="import" href="crouton-devices.html"/>
+<link rel="import" href="crouton-dashboard.html"/>
+<link rel="import" href="crouton-navigation.html"/>
+<link rel="import" href="crouton-getting-started.html"/>
+
+
+dom-module(id="crouton-frame")
+  template
+    link(rel="stylesheet", href="../css/crouton-frame.css")
+    crouton-container
+      div.grid
+        div#toasts
+
+        //NAVIGATION
+        crouton-navigation#crouton-navigation(current-page="{{currentPage}}")
+
+        //GETTING STARTED
+        div(id="gettingStarted" class$="{{selectedPage('gettingStarted',currentPage,'holder')}}")
+          crouton-getting-started
+
+        // DASHBOARD
+        div(id="dashboardHolder" class$="{{selectedPage('dashboard',currentPage,'holder')}}")
+          template(is="dom-if", if="{{!mqttConnected}}")
+            crouton-card(drop-shadow="false", bottom-bar="false").danger.grid__col.grid__col--12-of-12 Please connect to MQTT Broker in #[span(data-page="connections", on-click="changePage").link Connections]
+          crouton-dashboard(current-page="{{currentPage}}")#crouton-dashboard
+
+        // CONNECTIONS
+        div(class$="{{selectedPage('connections',currentPage,'holder')}}")
+          template(is="dom-if", if="{{!mqttConnected}}")
+            crouton-card(drop-shadow="false", bottom-bar="false").danger.grid__col.grid__col--12-of-12 Please connect to MQTT Broker below
+          template(is="dom-if", if="{{mqttConnected}}")
+            crouton-devices#crouton-devices
+          crouton-connect-mqtt#crouton-mqtt(address="test.mosquitto.org", port="8080", client-name="{{randomClientName}}")
+
+
+  script.
+    (function() {
+      Polymer({
+        is: "crouton-frame",
+        ready: function() {
+          var that = this;
+          this.values = {};
+          this.randomClientName = "crouton-client" + Math.floor((Math.random() * 100) + 1).toString();
+
+          //todo: implement mobile compatibility
+          // if (window.matchMedia('only screen and (max-width: 668px)').matches) {
+          //   this.isMobile = true;
+          // } else {
+          //   this.isMobile = false;
+          // }
+
+          this.toastContainer = document.getElementById("toasts");
+          addEventListener('makeToast', function(event){
+            var params = event.detail;
+            if(!params.duration){
+              params.duration = 2000;
+            }
+            var toast = document.createElement("paper-toast");
+            toast.setAttribute("duration", params.duration);
+            toast.setAttribute("class", "customToast");
+            if(params.color){
+              toast.style.color = params.color;
+            }
+            if(params.status){
+              params.message = "<i class='fa fa-"+params.status+" toastIcon'></i>" + params.message;
+            }
+            toast.innerHTML = params.message;
+            that.toastContainer.appendChild(toast);
+            that.async(function(){
+              toast.show();
+            }, 100);
+            that.async(function(){
+              toast.remove();
+            }, params.duration + 600);
+          });
+
+          this.mqttConnected = false;
+          document.getElementById("crouton-frame").addEventListener("mqttConnection", function(event){
+            that.mqttConnected = document.getElementById("crouton-mqtt").connected;
+          });
+
+        },
+        properties: {
+        },
+        //Change navigation page
+        changePage: function(event){
+          if(typeof event == "string"){
+            var newPage = event;
+          } else if(event.target.attributes['data-page'] != null){
+            var newPage = event.target.attributes['data-page'].value;
+          } else {
+            return
+          }
+          if(newPage != this.currentPage){
+            this.currentPage = newPage;
+            // document.querySelector("paper-drawer-panel").scrollTop = 0;
+            $(document).scrollTop = 0;
+            window.history.pushState({"page": this.currentPage}, this.currentPage, "/#" + this.currentPage);
+            this.fire("crouton-page-change", this.currentPage); //Unlike crouton-changePage which triggers a page change, this alerts that the page has been changed
+          }
+        },
+        selectedPage: function(name, current, extra) {
+          extra = extra ? ' ' + extra : ' ';
+          if(name === current){
+            return "" + extra
+          } else {
+            return "hidden" + extra
+          }
+        },
+        closeCard: function(event){
+          var element = event.target.parentNode._lightParent;
+          element.parentNode.removeChild(element);
+        }
+      });
+    }());

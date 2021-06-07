@@ -1,0 +1,187 @@
+link(rel="import", href="../static/common/bower/polymer/polymer.html")
+link(rel="import", href="../static/common/bower/paper-button/paper-button.html")
+
+
+dom-module(id="crouton-device-card")
+  template
+    link(rel="stylesheet", href="../css/crouton-device-card.css")
+    div.deviceTitle
+      span.deviceName {{deviceName}}
+      span.deviceStatus {{connectionStatus}}
+    div.deviceContent.grid.contentMarginFix
+      div.grid__col.grid__col--9-of-12
+        div.deviceDetails
+          template(is="dom-if", if="{{deviceJson.description}}")
+            div
+              span.detailTitle Description:
+              span {{deviceJson.description}}
+          template(is="dom-if", if="{{deviceJson.status}}")
+            div
+              span.detailTitle Status:
+              span {{deviceJson.status}}
+
+      div.grid__col.grid__col--3-of-12
+        div.deviceButtons
+          div.buttons
+            paper-button(disabled$="{{buttonCheck(connectionStatus)}}", on-click="toggleConnection", class$="{{connectionButtonBg(connectionStatus)}}", raised) {{displayButtonText(connectionStatus)}}
+            template(is="dom-if", if="{{!buttonCheck(connectionStatus)}}")
+              paper-button(disabled$="{{buttonCheck(connectionStatus)}}", on-click="removeDevice", raised).clear.rightBtn Remove
+          div.checkbox
+            p Auto-connect
+              paper-checkbox(on-change="autoConnect" checked="{{saveCheckbox}}").floatRight.topMargin
+
+
+  script.
+    (function() {
+      Polymer({
+        is: "crouton-device-card",
+        ready: function() {
+          this.devicesCard = document.getElementById("crouton-devices");
+          this.mqttCard = document.getElementById("crouton-mqtt");
+          this.croutonDashboard = document.getElementById("crouton-dashboard");
+        },
+        properties: {
+          deviceName: {
+            type: String
+          },
+          connectionStatus: {
+            type: String,
+            value: "connecting"
+          },
+          deviceJson: {
+            type: Object,
+            notify: true,
+            value: {}
+          },
+          deviceValues: {
+            type: Object,
+            notify: true
+          }
+        },
+        listeners: {
+
+        },
+        displayButtonText: function(connectionStatus){
+          if(connectionStatus == "connected"){
+            return "disconnect"
+          }
+          if(connectionStatus == "not connected"){
+            return "connect"
+          }
+          return "connecting..."
+        },
+        buttonCheck: function(connectionStatus){
+          if(connectionStatus == "connecting"){
+            return true
+          } else {
+            return false
+          }
+        },
+        connectionButtonBg: function(connectionStatus){
+          if(connectionStatus == "connected"){
+            return "dark"
+          } else {
+            return ""
+          }
+        },
+        removeDevice: function(){
+          this.devicesCard.removeDevice(this.deviceName);
+          this.alreadyRemoved = false;
+          if(this.connectionStatus == "not connected"){
+            this.alreadyRemoved = true;
+          } else {
+            this.connectionStatus = "not connected";
+          }
+          this.fire('makeToast', { message: "<b>" + this.deviceName + "</b> has been removed", duration: 3000, status: "exclamation-circle" });
+          this.mqttCard.unsubscribeAddress("/outbox/" + this.deviceName + "/deviceInfo");
+          this.unsubscribeDevice(this.alreadyRemoved);
+        },
+        connectDevice: function(){
+          this.connectionStatus = "connecting";
+          this.mqttCard.connectDevice(this.deviceName,this);
+          var index = this.savedDeviceIndex(this.deviceName);
+          this.saveCheckbox = index || index === 0 ? true : false;
+        },
+        disconnectDevice: function(){
+          this.connectionStatus = "not connected";
+          this.fire('makeToast', { message: "<b>" + this.deviceName + "</b> has been disconnected", duration: 3000, status: "exclamation-circle" });
+          this.unsubscribeDevice();
+        },
+        forcedDisconnect: function(message){
+          this.connectionStatus = "not connected";
+          this.fire('makeToast', { message: "<b>" + this.deviceName + "</b> has been disconnected", duration: 3000, status: "exclamation-circle" });
+          this.mqttCard.subscribeAddress("/outbox/" + this.deviceName + "/deviceInfo");
+          this.mqttCard.checkAutoConnect[this.deviceName] = true;
+          this.unsubscribeDevice();
+        },
+        subscribeDevice: function(){
+          this.mqttCard.subscribeAddress("/outbox/" + this.deviceName + "/lwt");
+          for (var key in this.deviceJson.endPoints){
+            if (this.deviceJson.endPoints.hasOwnProperty(key)) {
+              this.mqttCard.subscribeAddress("/outbox/" + this.deviceName + "/" + key);
+            }
+          }
+        },
+        unsubscribeDevice: function(alreadyRemoved){
+          alreadyRemoved = alreadyRemoved || false;
+          this.mqttCard.unsubscribeAddress("/outbox/" + this.deviceName + "/lwt");
+          for (var address in this.deviceJson.endPoints){
+            if (this.deviceJson.endPoints.hasOwnProperty(address)) {
+              this.mqttCard.unsubscribeAddress("/outbox/" + this.deviceName + "/" + address);
+              this.croutonDashboard.removeDeviceEndPoint(this.deviceName,address,alreadyRemoved);
+            }
+          }
+        },
+        toggleConnection: function(){
+          if(this.connectionStatus == "connected"){
+            this.disconnectDevice();
+          } else if(this.connectionStatus == "not connected"){
+            this.connectDevice();
+          }
+        },
+        autoConnect: function(){
+          if (this.mqttCard.storageAvailable('localStorage')) {
+            var deviceList = localStorage.getItem("crouton-devicelist");
+            var deviceListJson;
+            if(deviceList){
+              deviceListJson = JSON.parse(deviceList);
+            } else {
+              deviceListJson = {};
+              deviceListJson.devices = [];
+            }
+
+            if(this.saveCheckbox){
+              deviceListJson.devices.push(this.deviceName);
+              localStorage.setItem("crouton-devicelist", JSON.stringify(deviceListJson));
+              this.fire('makeToast', { message: "<b>" + this.deviceName + "</b> saved for auto-connect", duration: 2000, status: "check-circle" });
+            } else {
+              var index = this.savedDeviceIndex(this.deviceName);
+              if(index || index === 0){
+                deviceListJson.devices.splice(index, 1);
+              }
+              localStorage.setItem("crouton-devicelist", JSON.stringify(deviceListJson));
+              this.fire('makeToast', { message: "<b>" + this.deviceName + "</b> removed from auto-connect", duration: 2000, status: "check-circle" });
+            }
+
+          }
+          else {
+            this.fire('makeToast', { message: "Localstorage not detected", duration: 2000, status: "exclamation-circle" });
+          }
+        },
+        savedDeviceIndex: function(name){
+          if (this.mqttCard.storageAvailable('localStorage')) {
+            var deviceList = localStorage.getItem("crouton-devicelist");
+            if(deviceList){
+              var deviceListJson = JSON.parse(deviceList);
+              var index = deviceListJson.devices.indexOf(name);
+              if (index > -1) {
+                return index
+              } else {
+                return false
+              }
+            }
+          }
+          return false
+        }
+      });
+    }());

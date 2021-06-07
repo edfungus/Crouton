@@ -1,0 +1,118 @@
+link(rel="import", href="../static/common/bower/polymer/polymer.html")
+link(rel="import", href="crouton-card.html")
+
+
+dom-module(id="crouton-chart-line")
+  template
+    link(rel="stylesheet", href="../css/crouton-chart-line.css")
+    crouton-card
+      div.dragger
+      div.expand
+        div#chartDisplay
+        div.titleDisplay {{endPointJson.title}}
+
+  script.
+    (function() {
+      Polymer({
+        is: "crouton-chart-line",
+        properties: {
+          endPointJson: {
+            type: Object,
+            notify: true
+          }
+        },
+        observers: [
+          'newValues(endPointJson.values.*)'
+        ],
+        attached: function(){
+          this.checksInput();
+
+          var options = {
+            fullWidth: true,
+            width: "520px",
+            height: "150px",
+            chartPadding: {
+              right: 40
+            }
+          }
+          if(this.endPointJson.low){
+            options.low = this.endPointJson.low;
+          }
+          if(this.endPointJson.high){
+            options.high = this.endPointJson.high;
+          }
+
+          this.chart = new Chartist.Line(this.$.chartDisplay, {
+            labels: this.endPointJson.values.labels,
+            series: this.endPointJson.values.series
+          },options);
+
+          var that = this;
+          document.getElementById("crouton-frame").addEventListener("crouton-page-change", function(event){
+            if(event.detail == "dashboard"){
+              that.async(function(){
+                if(this.chart){
+                  that.chart.update();
+                }
+              },100);
+            }
+          });
+        },
+        newValues: function(changeRecord){
+          if(this.chart){
+            var update = changeRecord.path.split("endPointJson.values.")[1];
+            if(update == "update"){
+              var newValues = this.endPointJson.values.update;
+
+              var newLabels;
+              this.endPointJson.values.labels = this.endPointJson.values.labels.concat(this.endPointJson.values.update.labels);
+
+              var newSeries;
+              //series MUST be a 2d array
+              if(!Array.isArray(this.endPointJson.values.update.series) && typeof this.endPointJson.values.update.series === "number"){
+                this.endPointJson.values.update.series = [[this.endPointJson.values.update.series]];
+              }
+              if(Array.isArray(this.endPointJson.values.update.series) && !Array.isArray(this.endPointJson.values.update.series[0])){
+                this.endPointJson.values.update.series = [this.endPointJson.values.update.series];
+              }
+              //Adds new value to the respective lines
+              for(var i = 0; i < this.endPointJson.values.update.series.length; i++){
+                this.endPointJson.values.series[i] = this.endPointJson.values.series[i].concat(this.endPointJson.values.update.series[i]);
+              }
+              //Make sure each line is truncated to the max value
+              if(this.endPointJson.max){
+                for(var i = 0; i < this.endPointJson.values.series.length; i++){
+                  this.endPointJson.values.series[i] = this.endPointJson.values.series[i].slice(Math.max(this.endPointJson.values.series[i].length-this.endPointJson.max,0))
+                }
+                this.endPointJson.values.labels = this.endPointJson.values.labels.slice(Math.max(this.endPointJson.values.labels.length-this.endPointJson.max,0))
+              }
+
+              this.chart.update({
+                labels: this.endPointJson.values.labels,
+                series: this.endPointJson.values.series
+              });
+
+            } else {
+              this.checksInput();
+
+              this.chart.update({
+                labels: this.endPointJson.values.labels,
+                series: this.endPointJson.values.series
+              });
+            }
+          }
+        },
+        checksInput: function(){
+          if(!Array.isArray(this.endPointJson.values.series) && typeof this.endPointJson.values.series === "number"){
+            this.endPointJson.values.series = [[this.endPointJson.values.series]];
+          }
+          if(Array.isArray(this.endPointJson.values.series) && !Array.isArray(this.endPointJson.values.series[0])){
+            this.endPointJson.values.series = [this.endPointJson.values.series];
+          }
+          if(this.endPointJson.values.series.length == 0 || this.endPointJson.values.labels.length == 0){
+            this.endPointJson.values.series = [[0]];
+            this.endPointJson.values.labels = [0];
+          }
+        }
+      });
+    }());

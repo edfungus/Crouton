@@ -1,0 +1,31 @@
+link(rel="import", href="../static/common/bower/polymer/polymer.html")
+link(rel="import", href="crouton-card.html")
+
+
+dom-module(id="crouton-simple-text")
+  template
+    link(rel="stylesheet", href="../css/crouton-simple-text.css")
+    crouton-card
+      div.dragger
+      div.expand
+        div.textDisplay {{endPointJson.values.value}}
+        div.unitDisplay {{endPointJson.units}}
+        div.titleDisplay {{endPointJson.title}}
+
+  script.
+    (function() {
+      Polymer({
+        is: "crouton-simple-text",
+        properties: {
+          endPointJson: {
+            type: Object,
+            notify: true
+          }
+        },
+        observers: [
+          'newValues(endPointJson.values.*)'
+        ],
+        newValues: function(changeRecord){
+        }
+      });
+    }());

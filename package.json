@@ -6,19 +6,24 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app.js",
-    "postinstall": "node_modules/.bin/bower install"
+    "postinstall": "bower install"
   },
   "author": "Edmund Fung",
   "license": "MIT",
   "dependencies": {
     "bower": "^1.5.2",
     "express": "^4.13.3",
-    "jade": "^1.11.0",
+    "grunt-contrib-pug": "0.0.0",
+    "grunt-sync": "^0.5.2",
     "jit-grunt": "^0.9.1",
+    "pug": "^2.0.0-alpha6",
     "readdirp": "^2.0.0"
   },
   "devDependencies": {
     "grunt": "^0.4.5",
+    "grunt-contrib-clean": "^1.0.0",
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-contrib-connect": "^1.0.2",
     "grunt-contrib-less": "^1.0.1",
     "grunt-contrib-watch": "^0.6.1",
     "jit-grunt": "^0.9.1"

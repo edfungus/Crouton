@@ -1,0 +1,125 @@
+link(rel="import", href="../static/common/bower/polymer/polymer.html")
+link(rel="import", href="../static/common/bower/paper-input/paper-input.html")
+link(rel="import", href="../static/common/bower/paper-button/paper-button.html")
+link(rel="import", href="../static/common/bower/iron-form/iron-form.html")
+link(rel="import", href="crouton-card.html")
+link(rel="import", href="crouton-device-card.html")
+
+
+dom-module(id="crouton-devices")
+  template
+    link(rel="stylesheet", href="../css/crouton-devices.css")
+    crouton-card(drop-shadow="false", bottom-bar="false").grid__col.grid__col--12-of-12
+      p.header
+        span Devices
+        template(is="dom-if", if="{{!devices.length}}")
+          span.subTitle no devices
+        template(is="dom-if", if="{{devices.length}}")
+          span.subTitle
+            span {{devices.length}}
+            span   device(s)
+      template(is="dom-repeat", items="{{devices}}")
+        crouton-device-card(id="{{deviceId(item)}}", device-name="{{item}}")
+      div
+        paper-input(label="Enter new device name", type="text", value="{{newDeviceName::input}}", on-keypress="keyCheck", required)
+        div.addButtons
+          paper-button(type="submit", disabled$="{{validateNewDeviceInput(newDeviceName)}}", on-click="addDevice", raised).rightBtn Add Device
+
+
+  style(is="custom-style").
+    paper-input{
+      --paper-input-container-focus-color: grey;
+    }
+
+  script.
+    (function() {
+      Polymer({
+        is: "crouton-devices",
+        ready: function() {
+          var that = this;
+          this.devices = [];
+          this.newDeviceName = '';
+          this.deviceCardPrefix = "crouton-device-";
+
+          this.mqttCard = document.getElementById("crouton-mqtt");
+          this.mqttConnected = false;
+
+          document.getElementById("crouton-frame").addEventListener("mqttConnection", function(event){
+            that.mqttConnected = document.getElementById("crouton-mqtt").connected;
+          });
+
+        },
+        properties: {
+
+        },
+        listeners: {
+
+        },
+        attached: function(){
+          if (this.mqttCard.storageAvailable('localStorage')) {
+            var deviceList = localStorage.getItem("crouton-devicelist");
+            if(deviceList){
+              var deviceListJson = JSON.parse(deviceList);
+              for(var i = 0; i < deviceListJson.devices.length; i++){
+                this.addDevice(deviceListJson.devices[i]);
+              }
+            }
+          }
+        },
+        validateNewDeviceInput: function(newDeviceName){
+          //making sure there is a name not just white spaces... also need to filter special characteres later too
+          if(newDeviceName === null || newDeviceName.match(/^ *$/) !== null){
+            return true
+          } else {
+            return false
+          }
+        },
+        deviceId: function(name){
+          return this.deviceCardPrefix + name;
+        },
+        deviceValuePointer: function(name){
+          this.values[name] = {};
+          return this.values[name];
+        },
+        keyCheck: function(event){
+          if(event.keyCode == 13){
+            event.preventDefault();
+            this.addDevice();
+          }
+        },
+        addDevice: function(name){
+          var that = this;
+          if(typeof(name) != "string") {
+            name = this.newDeviceName;
+          }
+          if(this.devices.indexOf(name) === -1){
+            this.push('devices', name);
+            this.newDeviceName = '';
+            this.async(function(){
+            this.connectDevice(name);
+            }, 100);
+          } else {
+            this.fire('makeToast', { message: "Uh on! <b>" + name + "</b> already exists as a device", duration: 2000 });
+          }
+        },
+        removeDevice: function(name){
+          var index = this.devices.indexOf(name);
+          if (index > -1) {
+              this.splice('devices', index, 1);
+          }
+        },
+        connectDevice: function(name,autoAdd){
+          document.getElementById(this.deviceCardPrefix + name).connectDevice();
+        },
+        disconnectAllDevices: function(){
+          for(var device in this.devices){
+            if(typeof(this.devices[device]) == "string"){
+              document.getElementById(this.deviceCardPrefix + name).disconnectDevice();
+            }
+          }
+        },
+        addDemo: function(){
+          this.addDevice("crouton-demo");
+        }
+      });
+    }());

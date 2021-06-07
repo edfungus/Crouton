@@ -1,0 +1,64 @@
+link(rel="import", href="../static/common/bower/polymer/polymer.html")
+link(rel="import", href="../static/common/bower/paper-dropdown-menu/paper-dropdown-menu.html")
+link(rel="import", href="../static/common/bower/paper-listbox/paper-listbox.html")
+link(rel="import", href="../static/common/bower/paper-item/paper-item.html")
+link(rel="import", href="crouton-card.html")
+
+
+dom-module(id="crouton-simple-dropdown")
+  template
+    link(rel="stylesheet", href="../css/crouton-simple-dropdown.css")
+    crouton-card
+      div.dragger
+      div.expand
+        div.textDisplay {{endPointJson.values.value}}
+        div.dropDownDisplay
+          paper-dropdown-menu(label="Moods", value="{{selectedOption}}")
+            paper-listbox(selected="0", class="dropdown-content").dropdown-content
+              template(is="dom-repeat", items="{{endPointJson.options}}")
+                paper-item {{item}}
+          // paper-dropdown-menu(label="Dropdown", noAnimations)
+          //   paper-listbox(selected="1", class="dropdown-content")
+          //     paper-item Option A
+          //     paper-item Option B
+          //     paper-item Option C
+
+        div.titleDisplay {{endPointJson.title}}
+
+  style(is="custom-style").
+    paper-dropdown-menu{
+      --paper-input-container-focus-color: grey;
+    }
+
+  script.
+    (function() {
+      Polymer({
+        is: "crouton-simple-dropdown",
+        properties: {
+          endPointJson: {
+            type: Object,
+            notify: true
+          },
+          deviceName :{
+            type: String
+          },
+          endPointName :{
+            type: String
+          },
+          updatedSelectedOption: {
+            type: String,
+            computed: "newSelectedOption(value)"
+          }
+        },
+        observers: [
+          'newValues(endPointJson.values.*)'
+        ],
+        newValues: function(changeRecord){
+        },
+        newSelectedOption: function(value){
+          var newValue = {};
+          newValue.value = value;
+          this.mqtt.publishMessage("/inbox/"+this.deviceName+"/"+this.endPointName,JSON.stringify(newValue));
+        }
+      });
+    }());

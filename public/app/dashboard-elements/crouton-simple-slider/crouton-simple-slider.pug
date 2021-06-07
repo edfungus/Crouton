@@ -1,0 +1,70 @@
+link(rel="import", href="../static/common/bower/polymer/polymer.html")
+link(rel="import", href="../static/common/bower/paper-slider/paper-slider.html")
+link(rel="import", href="crouton-card.html")
+
+
+dom-module(id="crouton-simple-slider")
+  template
+    link(rel="stylesheet", href="../css/crouton-simple-slider.css")
+    crouton-card
+      div.dragger
+      div.expand
+        div.textDisplay {{endPointJson.values.value}}
+        div.unitDisplay {{endPointJson.units}}
+        div.slider
+          paper-slider#slider(max="{{endPointJson.max}}", min="{{endPointJson.min}}", immediate-value="{{localValue}}", pressed="{{userDragging}}", dragging="{{realDragging}}", active="{{active}}", pin)
+        div.titleDisplay {{endPointJson.title}}
+
+  style(is="custom-style").
+    paper-slider{
+      --paper-slider-knob-color: #4ecdc4;
+      --paper-slider-active-color: #4ecdc4;
+      --paper-slider-pin-color: #4ecdc4;
+    }
+
+  script.
+    (function() {
+      Polymer({
+        is: "crouton-simple-slider",
+        properties: {
+          endPointJson: {
+            type: Object,
+            notify: true
+          },
+          deviceName :{
+            type: String
+          },
+          endPointName :{
+            type: String
+          }
+        },
+        observers: [
+          'newValues(endPointJson.values.*)'
+        ],
+        attached: function(){
+          this.mqtt = document.getElementById("crouton-mqtt");
+          this.slider = this.$.slider;
+          this.slider.value = this.endPointJson.values.value;
+
+          var that = this;
+          this.addEventListener("change", function(event){
+            that.sendValue();
+          });
+          this.addEventListener("immediate-value-change", function(event){
+            that.sendValue();
+          });
+        },
+        newValues: function(changeRecord){
+          if(this.slider){
+            if(this.slider.pressed == false){
+              this.slider.value = this.endPointJson.values.value;
+            }
+          }
+        },
+        sendValue: function(){
+          var newValue = {};
+          newValue.value = this.localValue;
+          this.mqtt.publishMessage("/inbox/"+this.deviceName+"/"+this.endPointName,JSON.stringify(newValue));
+        }
+      });
+    }());

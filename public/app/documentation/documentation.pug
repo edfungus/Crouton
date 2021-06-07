@@ -1,0 +1,44 @@
+doctype html
+html(lang="en")
+  head
+    title Crouton Documentation
+    meta(name='viewport', content='width=device-width, user-scalable=no')
+    meta(name="apple-mobile-web-app-capable", content="yes")
+    script(src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js")
+    script(src='../js/flatdoc.min.js')
+    link(href='../css/fdstyle.css' rel='stylesheet')
+    link(href='../css/documentation.css' rel='stylesheet')
+    script(src='../js/script.min.js')
+
+    script.
+      Flatdoc.run({
+        fetcher: Flatdoc.file("../documentation.md")
+      });
+
+
+  body(role='flatdoc').large-brief
+    div.header
+      div.left
+        h1 Crouton
+        ul
+          li
+            a(href='#') A dashboard for you MQTT devices
+      div.right
+        ul
+          li
+            a(href='/') Back to Crouton >
+
+    div.content-root
+      div.menubar
+        div(role='flatdoc-menu').menu.section
+      div(role='flatdoc-content').content
+
+    //google analytics
+    script.
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-71079235-1', 'auto');
+      ga('send', 'pageview');

@@ -1,0 +1,52 @@
+link(rel="import", href="../static/common/bower/polymer/polymer.html")
+link(rel="import", href="../static/common/bower/paper-fab/paper-fab.html")
+link(rel="import", href="../static/common/bower/iron-icons/iron-icons.html")
+link(rel="import", href="../static/common/bower/iron-icon/iron-icon.html")
+link(rel="import", href="../static/common/bower/fontawesome-iconset/fa-all.html")
+link(rel="import", href="crouton-card.html")
+
+
+dom-module(id="crouton-simple-button")
+  template
+    link(rel="stylesheet", href="../css/crouton-simple-button.css")
+    crouton-card
+      div.dragger
+      div.expand
+        div.button
+          paper-fab(icon="{{icon}}" on-tap="buttonPushed" elevation="5" disabled="{{!endPointJson.values.value}}")
+        div.titleDisplay {{endPointJson.title}}
+
+  script.
+    (function() {
+      Polymer({
+        is: "crouton-simple-button",
+        ready: function() {
+        },
+        properties: {
+          endPointJson: {
+            type: Object,
+            notify: true
+          },
+          deviceName :{
+            type: String
+          },
+          endPointName :{
+            type: String
+          }
+        },
+        observers: [
+          'newValues(endPointJson.values.*)'
+        ],
+        attached: function(){
+          this.mqtt = document.getElementById("crouton-mqtt");
+          this.icon = "fa:" + this.endPointJson.icons.icon;
+        },
+        buttonPushed: function(){
+          var newValue = {};
+          newValue.value = true; //always true because it has to be true in order to be pushed
+          this.mqtt.publishMessage("/inbox/"+this.deviceName+"/"+this.endPointName,JSON.stringify(newValue));
+        },
+        newValues: function(changeRecord){
+        }
+      });
+    }());

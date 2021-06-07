@@ -1,0 +1,95 @@
+link(rel="import", href="../static/common/bower/polymer/polymer.html")
+link(rel="import", href="../static/common/bower/paper-toggle-button/paper-toggle-button.html")
+link(rel="import", href="crouton-card.html")
+
+
+dom-module(id="crouton-simple-toggle")
+  template
+    link(rel="stylesheet", href="../css/crouton-simple-toggle.css")
+    crouton-card
+      div.dragger
+      div.expand
+        div(class$="{{displayDim}}")
+          template(is="dom-if" if="{{isIcon}}")
+            div.textDisplay
+              i(class$="{{displayStatusText}}")
+          template(is="dom-if" if="{{!isIcon}}")
+            div.textDisplay {{displayStatusText}}
+        div.toggle
+          div.toggleTextLeft {{endPointJson.labels.false}}
+          div.toggleButton
+            paper-toggle-button(checked="{{displayStatusBoolean}}" noink)
+          div.toggleTextRight {{endPointJson.labels.true}}
+        div.titleDisplay {{endPointJson.title}}
+
+  script.
+    (function() {
+      Polymer({
+        is: "crouton-simple-toggle",
+        ready: function() {
+        },
+        properties: {
+          endPointJson: {
+            type: Object,
+            notify: true
+          },
+          deviceName :{
+            type: String
+          },
+          endPointName :{
+            type: String
+          }
+        },
+        observers: [
+          'newValues(endPointJson.values.*)'
+        ],
+        attached: function(){
+          //If no icons, we need to make sure the text for the true/false labels are set
+          if(!this.endPointJson.icon){
+            if(!this.endPointJson.labels){
+              this.endPointJson.labels = {};
+            }
+            if(!this.endPointJson.labels.true){
+              this.endPointJson.labels.true = "true";
+            }
+            if(!this.endPointJson.labels.false){
+              this.endPointJson.labels.false = "false";
+            }
+          }
+
+          this.newValues();
+          this.mqtt = document.getElementById("crouton-mqtt");
+
+          var that = this;
+          this.addEventListener("change", function(event){
+            event.stopPropagation();
+            var newValue = {};
+            newValue.value = this.displayStatusBoolean;
+            that.mqtt.publishMessage("/inbox/"+that.deviceName+"/"+that.endPointName,JSON.stringify(newValue));
+          })
+        },
+        newValues: function(changeRecord){
+          //Change icon.text
+          if(this.endPointJson.icons){
+            if(this.endPointJson.icons[this.endPointJson.values.value.toString()]){
+              this.displayStatusText = "fa fa-"+this.endPointJson.icons[this.endPointJson.values.value.toString()];
+              this.isIcon = true;
+            } else {
+              this.displayStatusText = this.endPointJson.labels[this.endPointJson.values.value.toString()];
+              this.isIcon = false;
+            }
+          } else {
+            this.displayStatusText = this.endPointJson.labels[this.endPointJson.values.value.toString()];
+            this.isIcon = false;
+          }
+          //Change dimming of text/icon
+          if(this.endPointJson.values.value){
+            this.displayDim = "";
+          } else {
+            this.displayDim = "dimText";
+          }
+          //Ensure toggle in correct position
+          this.displayStatusBoolean = this.endPointJson.values.value;
+        }
+      });
+    }());

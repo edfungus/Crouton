@@ -1,0 +1,106 @@
+link(rel="import", href="../static/common/bower/polymer/polymer.html")
+link(rel="import", href="../static/common/bower/paper-slider/paper-slider.html")
+link(rel="import", href="crouton-card.html")
+
+
+dom-module(id="crouton-rgb-slider")
+  template
+    link(rel="stylesheet", href="../css/crouton-rgb-slider.css")
+    crouton-card
+      div.dragger
+      div.expand
+        table.sliders
+          tr
+            td.label Red
+          tr
+            td #[paper-slider#red(max="{{endPointJson.max}}", min="{{endPointJson.min}}", immediate-value="{{localValue}}", pressed="{{userDragging}}", dragging="{{realDragging}}", active="{{active}}", pin)]
+          tr
+            td.label Green
+          tr
+            td #[paper-slider#green(max="{{endPointJson.max}}", min="{{endPointJson.min}}", immediate-value="{{localValue}}", pressed="{{userDragging}}", dragging="{{realDragging}}", active="{{active}}", pin)]
+          tr
+            td.label Blue
+          tr
+            td #[paper-slider#blue(max="{{endPointJson.max}}", min="{{endPointJson.min}}", immediate-value="{{localValue}}", pressed="{{userDragging}}", dragging="{{realDragging}}", active="{{active}}", pin)]
+        div.titleDisplay {{endPointJson.title}}
+
+  style(is="custom-style").
+    paper-slider#red{
+      --paper-slider-knob-color: lightcoral;
+      --paper-slider-active-color: lightcoral;
+      --paper-slider-pin-color: lightcoral;
+    }
+    paper-slider#green{
+      --paper-slider-knob-color: lightseagreen;
+      --paper-slider-active-color: lightseagreen;
+      --paper-slider-pin-color: lightseagreen;
+    }
+    paper-slider#blue{
+      --paper-slider-knob-color: lightskyblue;
+      --paper-slider-active-color: lightskyblue;
+      --paper-slider-pin-color: lightskyblue;
+    }
+
+  script.
+    (function() {
+      Polymer({
+        is: "crouton-rgb-slider",
+        properties: {
+          endPointJson: {
+            type: Object,
+            notify: true
+          },
+          deviceName :{
+            type: String
+          },
+          endPointName :{
+            type: String
+          }
+        },
+        observers: [
+          'newValues(endPointJson.values.*)'
+        ],
+        attached: function(){
+          this.mqtt = document.getElementById("crouton-mqtt");
+          this.red = this.$.red;
+          this.green = this.$.green;
+          this.blue = this.$.blue;
+          this.red.value = this.endPointJson.values.red;
+          this.green.value = this.endPointJson.values.green;
+          this.blue.value = this.endPointJson.values.blue;
+
+          var that = this;
+          this.addEventListener("change", function(event){
+            that.sendValue(event);
+          });
+          this.addEventListener("immediate-value-change", function(event){
+            that.sendValue(event);
+          });
+        },
+        newValues: function(changeRecord){
+          if(this.red && this.green && this.blue){
+            var color = changeRecord.path.split("endPointJson.values.")[1];
+            if(color == "red"){
+              if(this.red.pressed == false){
+                this.red.value = this.endPointJson.values.red;
+              }
+            }
+            if(color == "green"){
+              if(this.green.pressed == false){
+                this.green.value = this.endPointJson.values.green;
+              }
+            }
+            if(color == "blue"){
+              if(this.blue.pressed == false){
+                this.blue.value = this.endPointJson.values.blue;
+              }
+            }
+          }
+        },
+        sendValue: function(event){
+          var newValue = {};
+          newValue[event.target.id] = this.localValue;
+          this.mqtt.publishMessage("/inbox/"+this.deviceName+"/"+this.endPointName,JSON.stringify(newValue));
+        }
+      });
+    }());
